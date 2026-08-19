@@ -180,6 +180,13 @@ function PostCard({ post, categories, index }: { post: BlogPost; categories: any
               <img
                 src={post.featuredImage}
                 alt={post.title}
+                /* Featured images are stored at their original upload size — a
+                   few are several megabytes — and every card on this page was
+                   fetching one eagerly to fill a 180px box. Deferring the
+                   offscreen ones is the half of that we can fix from here; the
+                   stored files still need to come down. */
+                loading="lazy"
+                decoding="async"
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 data-testid={`img-blog-post-${post.id}`}
               />

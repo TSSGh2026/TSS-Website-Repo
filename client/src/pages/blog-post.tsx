@@ -269,9 +269,13 @@ function AuthorBlock({ authorId, authorName, authors }: { authorId: number | nul
       data-testid="author-block"
     >
       {author.photo && (
+        // The bio sits below the article, so this one can wait. The small byline
+        // portrait at the top of the page stays eager — it is in the first screen.
         <img
           src={author.photo}
           alt={author.name}
+          loading="lazy"
+          decoding="async"
           style={{ width: "64px", height: "64px", borderRadius: "50%", objectFit: "cover", flexShrink: 0, border: "2px solid rgba(167,139,250,0.3)" }}
           data-testid="img-author-photo"
         />
@@ -404,9 +408,14 @@ function RelatedPosts({ slug, categories }: { slug: string; categories: any[] })
               data-testid={`related-post-${post.id}`}
             >
               {post.featuredImage && (
+                // Sixty pixels of thumbnail at the very bottom of the article, and
+                // the stored file behind it can run to several megabytes. None of
+                // it is worth fetching until the reader actually gets down here.
                 <img
                   src={post.featuredImage}
                   alt={post.title}
+                  loading="lazy"
+                  decoding="async"
                   style={{ width: "60px", height: "60px", objectFit: "cover", borderRadius: "6px", flexShrink: 0 }}
                 />
               )}

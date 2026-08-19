@@ -121,6 +121,8 @@ function MemberCard({ member, idx }: { member: PortfolioSummary; idx: number }) 
           <img
             src={portrait}
             alt={member.name}
+            loading="lazy"
+            decoding="async"
             style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: photoPosition }}
             data-testid={`img-member-${member.slug}`}
           />

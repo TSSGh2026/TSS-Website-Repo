@@ -176,7 +176,7 @@ export default function PortfolioPage() {
               style={{ display: "flex", gap: "3rem", paddingRight: "3rem", flexShrink: 0 }}>
               {[...brands.items, ...brands.items].map((b, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.6rem", whiteSpace: "nowrap", color: MUTED, fontSize: "1rem" }} data-testid={`text-brand-${i}`}>
-                  {b.logo && <img src={b.logo} alt="" style={{ width: 18, height: 18, objectFit: "contain", opacity: 0.8 }} />}
+                  {b.logo && <img src={b.logo} alt="" loading="lazy" decoding="async" style={{ width: 18, height: 18, objectFit: "contain", opacity: 0.8 }} />}
                   <span>{b.name}</span>
                 </div>
               ))}
@@ -214,7 +214,7 @@ export default function PortfolioPage() {
                   >
                     {c.image && (
                       <div style={{ width: "100%", aspectRatio: "16/6", overflow: "hidden", borderBottom: `1px solid ${BORDER}` }}>
-                        <img src={c.image} alt={c.cardTitle || ""} style={{ width: "100%", height: "100%", objectFit: "cover" }} data-testid={`img-case-${i}`} />
+                        <img src={c.image} alt={c.cardTitle || ""} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} data-testid={`img-case-${i}`} />
                       </div>
                     )}
                     <div style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
@@ -250,7 +250,7 @@ export default function PortfolioPage() {
                       </p>
                       <footer style={{ display: "flex", alignItems: "center", gap: "0.65rem" }}>
                         {t.avatar ? (
-                          <img src={t.avatar} alt="" style={{ width: 32, height: 32, borderRadius: "50%", objectFit: "cover" }} />
+                          <img src={t.avatar} alt="" loading="lazy" decoding="async" style={{ width: 32, height: 32, borderRadius: "50%", objectFit: "cover" }} />
                         ) : (
                           <div style={{ width: 32, height: 32, borderRadius: "50%", backgroundColor: ACCENT, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.65rem", color: "#fff" }}>
                             {(t.name || "").split(" ").map((n) => n[0]).slice(0, 2).join("")}
@@ -340,11 +340,11 @@ export default function PortfolioPage() {
             {about.photo && (
               <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <div style={{ aspectRatio: "4/5", overflow: "hidden", borderRadius: "12px", border: `1px solid ${BORDER}` }}>
-                  <img src={about.photo} alt={portfolio.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} data-testid="img-about-photo" />
+                  <img src={about.photo} alt={portfolio.name} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} data-testid="img-about-photo" />
                 </div>
                 {about.secondaryPhoto && (
                   <div style={{ aspectRatio: "4/3", overflow: "hidden", borderRadius: "12px", border: `1px solid ${BORDER}` }}>
-                    <img src={about.secondaryPhoto} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} data-testid="img-about-secondary" />
+                    <img src={about.secondaryPhoto} alt="" loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} data-testid="img-about-secondary" />
                   </div>
                 )}
               </div>
@@ -498,7 +498,7 @@ export default function PortfolioPage() {
                     )}
                     {c.image && (
                       <div style={{ width: "100%", aspectRatio: "16/9", overflow: "hidden", borderRadius: "8px", marginBottom: "1.5rem", border: `1px solid ${BORDER}` }}>
-                        <img src={c.image} alt={c.cardTitle || ""} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        <img src={c.image} alt={c.cardTitle || ""} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                       </div>
                     )}
                     {c.whatIBuilt && (
