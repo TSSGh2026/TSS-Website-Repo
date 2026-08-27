@@ -16,8 +16,17 @@ export const CONTACT = {
   email: "hello@storyshaperscollective.com",
   whatsapp: "919147740521",
   whatsappLabel: "WhatsApp +91 91477 40521",
-  /** the form — for people who would rather be asked the right questions */
-  form: "/contact",
+  /**
+   * The form — for people who would rather be asked the right questions.
+   *
+   * The hash is not decoration. /contact carries two forms, and the first one
+   * on the page is "Join the Collective" — a job application. A button that
+   * says "Start a conversation" belongs to someone with work to hand over, and
+   * dropping them at the top of a hiring form asks them to read past it. #talk
+   * is the second card, "Let's Talk", which asks for company and what they are
+   * working on. The page scrolls to the hash on mount, so this lands.
+   */
+  form: "/contact#talk",
 } as const;
 
 export const mailto = `mailto:${CONTACT.email}`;

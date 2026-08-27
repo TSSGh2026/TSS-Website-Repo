@@ -6,7 +6,9 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
+import { Link } from "wouter";
 import { Act, ActLabel, ActWrap } from "./Act";
+import { CONTACT } from "@/lib/contact";
 
 const DEEP = "#09072B";
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -245,6 +247,71 @@ function Row({
           />
         ))}
       </ul>
+
+      <StageCta
+        row={row}
+        progress={progress}
+        at={0.29 + 0.085 * index + 0.016 * row.items.length}
+      />
+    </motion.div>
+  );
+}
+
+/**
+ * The way out of a stage.
+ *
+ * This section had no action in it at all. Three rows, each one naming a
+ * different thing that might be wrong — "the story isn't clear yet", "it has
+ * stopped landing" — and then nothing to do about it. A reader who recognises
+ * their own situation here is the most persuaded they will be anywhere on the
+ * page, and the only thing on offer was to keep scrolling.
+ *
+ * `?stage=` rides along so the enquiry arrives knowing which door it came
+ * through. Shape and Sharpen are near-opposite problems, and knowing which one
+ * a person picked is most of the first reply.
+ *
+ * A text link, not a filled pill. The closing act's button is the only filled
+ * block on the page and it stays that way — three magenta buttons up here would
+ * outshout the one that matters and turn a menu into a pitch.
+ */
+function StageCta({
+  row,
+  progress,
+  at,
+}: {
+  row: { id: string; title: string };
+  progress: MotionValue<number>;
+  at: number;
+}) {
+  const reduced = useReducedMotion();
+  const opacity = useTransform(progress, [at, at + 0.05], [0, 1], { clamp: true });
+
+  return (
+    <motion.div
+      className="mt-[1.4rem]"
+      style={reduced ? undefined : { opacity }}
+    >
+      <Link
+        href={`/contact?stage=${row.id}#talk`}
+        className="group/cta inline-flex items-baseline gap-[0.45rem] no-underline transition-colors duration-200"
+        style={{
+          fontFamily: "'Switzer', sans-serif",
+          fontSize: "0.9rem",
+          fontWeight: 500,
+          color: "#cf81cd",
+          borderBottom: "1px solid rgba(207,129,205,0.35)",
+          paddingBottom: "0.15rem",
+        }}
+        data-testid={`link-stage-cta-${row.id}`}
+      >
+        Start with {row.title}
+        <span
+          aria-hidden="true"
+          className="transition-transform duration-200 group-hover/cta:translate-x-1"
+        >
+          →
+        </span>
+      </Link>
     </motion.div>
   );
 }

@@ -5,6 +5,7 @@ import { imageSrc, fallbackToOriginal } from "@/lib/image-src";
 import { motion, AnimatePresence } from "framer-motion";
 import DOMPurify from "dompurify";
 import { Navbar } from "@/components/layout/Navbar";
+import { CONTACT } from "@/lib/contact";
 import logoImg from "@assets/FullLogo_Transparent_NoBuffer_1772265926648.png";
 
 type CTA = { label: string; href: string };
@@ -411,11 +412,14 @@ export default function PortfolioPage() {
             Want to work with {portfolio.name}?
           </h2>
           <p style={{ color: MUTED, fontSize: "1rem", marginBottom: "1.5rem", maxWidth: "560px", marginLeft: "auto", marginRight: "auto" }}>
-            Specific offers will be listed here soon. Until then, reach out to start a conversation.
+            Tell us what you're working on and we'll come back with how we'd approach it.
           </p>
-          <a href="/contact" style={{ fontFamily: "'Switzer', sans-serif", fontSize: "0.65rem", letterSpacing: "0.18em", textTransform: "uppercase", padding: "0.95rem 1.5rem", borderRadius: "6px", backgroundColor: ACCENT, color: "#FFFFFF", border: `1px solid ${ACCENT}`, textDecoration: "none", display: "inline-block" }}
+          {/* Was "Get in touch →" pointing at bare /contact — a third phrase for
+              the one action the rest of the site calls "Start a conversation",
+              landing on the job-application form rather than the client one. */}
+          <a href={CONTACT.form} style={{ fontFamily: "'Switzer', sans-serif", fontSize: "0.65rem", letterSpacing: "0.18em", textTransform: "uppercase", padding: "0.95rem 1.5rem", borderRadius: "6px", backgroundColor: ACCENT, color: "#FFFFFF", border: `1px solid ${ACCENT}`, textDecoration: "none", display: "inline-block" }}
             data-testid="button-work-fallback-contact">
-            Get in touch →
+            Start a conversation →
           </a>
         </section>
       ) : null}

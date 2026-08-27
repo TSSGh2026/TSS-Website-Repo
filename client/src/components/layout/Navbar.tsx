@@ -313,20 +313,17 @@ export function Navbar() {
         )}
       </div>
 
-      <a
-        href="/contact#talk"
-        onClick={(e) => {
-          e.preventDefault();
-          setLocation("/contact");
-          setTimeout(() => {
-            const el = document.getElementById("talk");
-            if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-          }, 100);
-        }}
+      {/* The handler this used to carry navigated to "/contact" — without the
+          hash — and then tried to scroll to #talk itself on a 100ms timer. It
+          dropped the reader at the top of the page, on the job-application
+          form, because losing the hash also let the router's scroll-to-top run.
+          The contact page lands its own hash now, so the link is just a link. */}
+      <Link
+        href={CONTACT.form}
         className="hidden md:flex items-center justify-center px-6 py-2.5 rounded text-sm font-medium transition-colors bg-secondary text-white border border-secondary hover:bg-[#9B3E9A] hover:border-[#9B3E9A]"
       >
         Let's Talk
-      </a>
+      </Link>
 
       {/* Two strokes rather than three. The bar carries one wordmark and one
           control, and a third line buys nothing but a heavier mark against a
@@ -525,11 +522,11 @@ function MobileMenu({
         {/* The same filled pill the close uses, because it is the same ask. */}
         <div className="mt-[2.6rem]">
           <a
-            href="/contact"
+            href={CONTACT.form}
             onClick={(e) => {
               e.preventDefault();
               onClose();
-              onNavigate("/contact");
+              onNavigate(CONTACT.form);
             }}
             className="flex min-h-12 items-center justify-center gap-[0.6rem] rounded-full px-[2rem] py-[1.05rem] no-underline transition-colors duration-200 active:scale-[0.985] focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-white"
             style={{

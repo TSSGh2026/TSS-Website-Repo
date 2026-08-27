@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "wouter";
 import { RichText } from "./RichText";
+import { CONTACT } from "@/lib/contact";
 import type { Case } from "@/data/cases";
 
 const BONE = "#F4F1EA";
@@ -87,16 +89,10 @@ export function CaseReader({
     };
   }, []);
 
-  /* Closing towards an act rather than back to the card. Both halves are told
-     at once: the cleanup below does the scrolling, the parent skips the back()
-     that would undo it. */
-  const closeTo = useCallback(
-    (id: string) => {
-      goToRef.current = id;
-      onClose({ to: id });
-    },
-    [onClose],
-  );
+  /* `closeTo` lived here — closing towards an act rather than back to the card,
+     for the foot-of-the-case link that used to land on #act-close. That link
+     goes to the contact form now, so nothing closes towards an act any more.
+     `goToRef` is still read by the cleanup above, for `landOn`. */
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -385,15 +381,16 @@ export function CaseReader({
           <RichText>{c.close}</RichText>
         </p>
 
-        <a
-          href="#act-close"
-          onClick={(e) => {
-            /* the hash is handled here, not by the browser: letting the anchor
-               navigate pushes an #act-close entry on top of this case's own,
-               and Back would then reopen the case the reader just left */
-            e.preventDefault();
-            closeTo("act-close");
-          }}
+        {/* Goes to the form, not back to the page.
+            This used to close the reader and scroll to #act-close — the third
+            button on the site saying "Start a conversation" that actually took
+            you to a different button saying "Start a conversation". It fired at
+            the worst possible moment to add a step: someone has just read a
+            whole case study to the end, which is the most interested they will
+            ever be. Closing the reader is still available three other ways —
+            the close button, Escape, and the backdrop. */}
+        <Link
+          href={CONTACT.form}
           className="mt-[2rem] inline-flex transition-colors duration-200"
           style={{
             color: NAVY,
@@ -406,7 +403,7 @@ export function CaseReader({
           }}
         >
           Start a conversation <span aria-hidden="true">&nbsp;→</span>
-        </a>
+        </Link>
       </article>
     </div>,
     document.body,

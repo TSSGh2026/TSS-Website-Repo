@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { Link } from "wouter";
 import { useMotionValueEvent, useReducedMotion, type MotionValue } from "framer-motion";
 import { Act, ActWrap } from "./Act";
 import { useNarrow } from "@/hooks/use-act-progress";
@@ -129,6 +130,59 @@ const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
  * line. Measured: 5.4 gives 57% at 1440, and 9 gives 59% at 375.
  */
 const rowsOpen = () => (window.innerWidth < 40 * 16 ? 9 : 5.4);
+
+/**
+ * The button the film ends on.
+ *
+ * It used to be a bare <a>, which was right when the href was a hash: through
+ * hero v4 this button pointed at "#act-close" and merely scrolled the reader
+ * down to the closing act, where a second button with the same words on it was
+ * the one that opened the form. Now it goes to the form itself.
+ *
+ * Which means the element has to be chosen rather than assumed. "/contact" is a
+ * wouter route, and a plain anchor would reload the whole app to reach a page
+ * the client already has. But the href is a CMS field — free text, edited in
+ * the admin, and it has held a hash before — so a hash or an off-site URL still
+ * has to render as an anchor the browser handles itself. Handing either of
+ * those to wouter's Link would push it onto the router as a path.
+ */
+function HeroCta({ href, label }: { href: string; label: string }) {
+  const className =
+    "group relative mt-[clamp(2rem,5vh,3.5rem)] inline-flex min-h-12 items-center gap-[0.6rem] rounded-full px-[2.1rem] py-[1.05rem] no-underline transition-[background-color,transform] duration-200 hover:bg-[#e0a0de] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-white";
+  const style: React.CSSProperties = {
+    backgroundColor: "#cf81cd",
+    color: NAVY,
+    fontFamily: "'Switzer', sans-serif",
+    fontSize: "1.02rem",
+    fontWeight: 600,
+    letterSpacing: "0.005em",
+  };
+  const inner = (
+    <>
+      {label}
+      <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">
+        →
+      </span>
+    </>
+  );
+
+  /* leading slash, and not "//" — that is a protocol-relative URL, off-site */
+  const isRoute = href.startsWith("/") && !href.startsWith("//");
+
+  if (isRoute) {
+    return (
+      <Link href={href} className={className} style={style} data-testid="button-hero-cta">
+        {inner}
+      </Link>
+    );
+  }
+
+  return (
+    <a href={href} className={className} style={style} data-testid="button-hero-cta">
+      {inner}
+    </a>
+  );
+}
 
 function Shaping({ progress }: { progress: MotionValue<number> }) {
   const reduced = useReducedMotion();
@@ -416,24 +470,7 @@ function Shaping({ progress }: { progress: MotionValue<number> }) {
             itself is outside the content box min-height:0 zeroes, so it kept
             sizing the track and the collapsed tail was still 33px tall. */}
         <div className="min-h-0 overflow-hidden pb-[14px] mb-[-14px]">
-          <a
-            href={hero.ctaLink}
-            className="group relative mt-[clamp(2rem,5vh,3.5rem)] inline-flex min-h-12 items-center gap-[0.6rem] rounded-full px-[2.1rem] py-[1.05rem] no-underline transition-[background-color,transform] duration-200 hover:bg-[#e0a0de] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-white"
-            style={{
-              backgroundColor: "#cf81cd",
-              color: NAVY,
-              fontFamily: "'Switzer', sans-serif",
-              fontSize: "1.02rem",
-              fontWeight: 600,
-              letterSpacing: "0.005em",
-            }}
-            data-testid="button-hero-cta"
-          >
-            {hero.ctaText}
-            <span aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1">
-              →
-            </span>
-          </a>
+          <HeroCta href={hero.ctaLink} label={hero.ctaText} />
         </div>
       </div>
 

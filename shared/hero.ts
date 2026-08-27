@@ -22,7 +22,7 @@
  *
  * Bump HERO_VERSION when the shipped hero copy below changes.
  */
-export const HERO_VERSION = 4;
+export const HERO_VERSION = 5;
 
 /**
  * v4 is the scroll-carve hero. The film is no longer a timed sequence of two
@@ -37,6 +37,28 @@ export const HERO_VERSION = 4;
  *
  * `secondaryCta*` stays in the shape because the admin form and the stored rows
  * still carry it. Nothing renders it.
+ *
+ * v5 sends the button where it says it goes. Through v4 `ctaLink` was
+ * "#act-close", so "Start a conversation" scrolled the reader down the whole
+ * page to the closing act — where they found a second button, with the same
+ * words on it, which was the one that actually opened the form. The button did
+ * not start a conversation; it introduced you to the button that would. That is
+ * a click and a page of scroll charged to someone who had already decided.
+ *
+ * It is a version bump rather than a one-word edit because the stored row wins:
+ * production held a v4 row carrying "#act-close", and `currentHero` merges any
+ * row whose version matches over these defaults. Editing the default alone
+ * would have changed nothing on the live site. Moving the version retires that
+ * row on both sides — the seed replaces it, the component ignores it.
+ *
+ * The target is CONTACT.form in client/src/lib/contact.ts — the same place the
+ * closing act's button points, so the two buttons that carry the same words now
+ * carry the same destination. It is written out rather than imported because
+ * `shared` is bundled into the server and should not reach into the client for
+ * a constant; if the form ever moves, both change.
+ *
+ * The hash matters: /contact leads with "Join the Collective", a job
+ * application, and the client form is the second card down.
  */
 export const HERO_CONTENT = {
   version: HERO_VERSION,
@@ -45,7 +67,7 @@ export const HERO_CONTENT = {
   subheading:
     "We are a full-service, senior-led marketing collective that helps ambitious companies shape brand strategy, positioning, content and go-to-market stories that genuinely land.",
   ctaText: "Start a conversation",
-  ctaLink: "#act-close",
+  ctaLink: "/contact#talk",
   secondaryCtaText: "What we do",
   secondaryCtaLink: "#services",
 };
