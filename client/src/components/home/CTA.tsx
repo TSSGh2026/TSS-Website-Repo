@@ -4,9 +4,9 @@ import { Link } from "wouter";
 import { Act, ActWrap } from "./Act";
 import { HeartDoodle } from "./Doodles";
 import { CONTACT, mailto, whatsappHref } from "@/lib/contact";
-import fatemaFace from "@/assets/shapers/fatema-face.jpg";
-import shailiFace from "@/assets/shapers/shaili-face.jpg";
-import aakankshaFace from "@/assets/shapers/aakanksha-face.jpg";
+import fatemaFace from "@/assets/shapers/fatema-face.webp";
+import shailiFace from "@/assets/shapers/shaili-face.webp";
+import aakankshaFace from "@/assets/shapers/aakanksha-face.webp";
 
 const ACCENT = "#cf81cd";
 const NAVY = "#0C0A3E";

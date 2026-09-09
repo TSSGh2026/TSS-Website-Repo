@@ -1,9 +1,9 @@
-import headoutImg from "@/assets/cases/headout.jpg";
-import lbbImg from "@/assets/cases/lbb.jpg";
-import tuisaImg from "@/assets/cases/tuisa.jpg";
-import tuisaArchiveImg from "@/assets/cases/tuisa-archive.jpg";
-import socialImg from "@/assets/cases/social.jpg";
-import ccplImg from "@/assets/cases/ccpl.jpg";
+import headoutImg from "@/assets/cases/headout.webp";
+import lbbImg from "@/assets/cases/lbb.webp";
+import tuisaImg from "@/assets/cases/tuisa.webp";
+import tuisaArchiveImg from "@/assets/cases/tuisa-archive.webp";
+import socialImg from "@/assets/cases/social.webp";
+import ccplImg from "@/assets/cases/ccpl.webp";
 
 /**
  * THE CASE STUDIES.

@@ -2,12 +2,12 @@ import { motion, useReducedMotion, useTransform, type MotionValue } from "framer
 import { Act } from "./Act";
 import { useNarrow } from "@/hooks/use-act-progress";
 import { CrewDoodle } from "./Doodles";
-import fatemaPanel from "@/assets/shapers/fatema-panel.jpg";
-import shailiPanel from "@/assets/shapers/shaili-panel.jpg";
-import aakankshaPanel from "@/assets/shapers/aakanksha-panel.jpg";
-import fatemaFace from "@/assets/shapers/fatema-face.jpg";
-import shailiFace from "@/assets/shapers/shaili-face.jpg";
-import aakankshaFace from "@/assets/shapers/aakanksha-face.jpg";
+import fatemaPanel from "@/assets/shapers/fatema-panel.webp";
+import shailiPanel from "@/assets/shapers/shaili-panel.webp";
+import aakankshaPanel from "@/assets/shapers/aakanksha-panel.webp";
+import fatemaFace from "@/assets/shapers/fatema-face.webp";
+import shailiFace from "@/assets/shapers/shaili-face.webp";
+import aakankshaFace from "@/assets/shapers/aakanksha-face.webp";
 
 const BONE = "#F4F1EA";
 const NAVY = "#0C0A3E";
