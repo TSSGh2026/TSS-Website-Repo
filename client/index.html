@@ -53,13 +53,18 @@
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <!-- Zodiak and Switzer are self-hosted; the @font-face rules live in
-         index.css and the files in /public/fonts. Preloading the two faces the
-         first screen actually uses, because a stylesheet-declared font is not
-         discovered until the CSS has parsed, and `font-display: block` means
-         that gap is invisible text rather than fallback text. The other five
-         weights load when something needs them. -->
+         index.css and the files in /public/fonts. The first screen renders six
+         of the seven weights (measured, 9 Sep: Switzer 400/500/600, Zodiak 400
+         + 700 + 700 italic), and `font-display: block` keeps text invisible
+         until each one lands — so all six are critical-path and preloaded here,
+         ahead of the JS bundle they would otherwise queue behind. Only
+         zodiak-400-italic waits until something needs it. -->
     <link rel="preload" href="/fonts/zodiak-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/zodiak-700-italic.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/zodiak-400-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="/fonts/switzer-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/switzer-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/switzer-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 
     <script>
       // Campaign analytics. IDs arrive when Meta Business Manager is set up;
