@@ -115,3 +115,22 @@ The peak's door only exists at a particular scroll offset because the act is
 pinned. To land on it: scroll to `#act-peak`'s top plus 0.9 of
 `(offsetHeight - innerHeight)`. Using the full `offsetHeight` scrolls clean past
 the pin into the next act.
+
+## Renders and the scripts that made them
+
+In `.design/shots/team-expansion/` — gitignored, like every other screenshot in
+this repo, because they are regenerable and not source.
+
+- `team-1440-full.png`, `team-390-full.png` — the whole /team page
+- `peak-door-1440.png`, `peak-door-390.png` — the homepage door in the peak
+- `variant-A/B/C.png`, `copy-variants.png` — the three standfirst options in place
+- `team-reduced-motion.png` — proof the page still renders with motion off
+
+The three `shoot-*.mjs` scripts regenerate all of it. Run them with the preview
+server up. They drive headless Chrome through `puppeteer-core` and intercept
+`/api`, `/assets` and `/img` to production, so they work without a database and
+never touch the real browser.
+
+`shoot-variants.mjs` swaps the standfirst text on the live page rather than
+mocking it up, so each option is in the real face at the real size — useful again
+when she picks, or if the copy needs another round.
