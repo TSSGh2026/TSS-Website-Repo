@@ -1,4 +1,5 @@
 import { motion, useReducedMotion, useTransform, type MotionValue } from "framer-motion";
+import { Link } from "wouter";
 import { Act } from "./Act";
 import { useNarrow } from "@/hooks/use-act-progress";
 import { CrewDoodle } from "./Doodles";
@@ -463,6 +464,36 @@ function Convergence({
           Not someone
           <br className="sm:hidden" /> we've briefed.
         </p>
+
+        {/* THE DOOR TO THE REST OF THE COLLECTIVE.
+            The homepage carries three people and the collective is now six, so
+            until this line existed nothing on the page admitted the other three
+            were there at all — the only route to them was the nav.
+
+            It is a link and not a section, and the distinction is the whole
+            argument. Three more panels would double a pinned act that already
+            costs 3.4 screens and would put six faces under a sentence about
+            three. A quiet line under the claim adds no scroll and reads as an
+            invitation rather than a counter-claim.
+
+            Set in the label face, not the serif, precisely so it cannot compete
+            with the line above it. The eye finishes the statement, then finds
+            this. The other order would be a disaster. */}
+        <Link
+          href="/team"
+          className="mt-[clamp(2rem,4vh,3rem)] inline-block no-underline"
+          style={{
+            fontFamily: "'Switzer', sans-serif",
+            fontSize: "0.68rem",
+            fontWeight: 500,
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            color: ACCENT_DEEP,
+          }}
+          data-testid="link-peak-collective"
+        >
+          Meet the full collective →
+        </Link>
       </div>
     </motion.div>
   );
