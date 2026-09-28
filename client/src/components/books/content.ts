@@ -199,19 +199,23 @@ export type Format = {
   cloth: string;
   /** What the inside looks like when the cover swings open. */
   inside: "text" | "photo" | "zine";
+  /** The photograph on a photo page, when it should differ from the family album. */
+  image?: string;
+  /** One line on what the format is for, shown in the enlarged view. */
+  use: string;
   /** Drawn as a different object from a book with a cover that swings open. */
   kind?: "slipcase" | "boxed" | "ebook";
 };
 
 export const FORMATS: Format[] = [
-  { id: "zine", name: "Keepsake zine", spec: "A5 · 16 to 32 pages", w: 115, h: 164, cloth: "#7b1e7a", inside: "zine" },
-  { id: "paperback", name: "Paperback", spec: "6 × 9 in · 80 to 250 pages", w: 119, h: 179, cloth: "#8a7f68", inside: "text" },
-  { id: "hardcover", name: "Hardcover", spec: "6 × 9 in · sewn, cloth-bound", w: 124, h: 184, cloth: "#0c0a3e", inside: "text" },
-  { id: "layflat", name: "Lay-flat photo book", spec: "10 × 10 in · 40 to 160 pages", w: 198, h: 198, cloth: "#12213a", inside: "photo" },
-  { id: "coffee", name: "Coffee table book", spec: "12 × 10 in · 120 to 240 pages", w: 238, h: 198, cloth: "#3c1030", inside: "photo" },
-  { id: "slipcase", name: "Slipcase edition", spec: "Any book · in a cloth case", w: 132, h: 192, cloth: "#241033", inside: "text", kind: "slipcase" },
-  { id: "boxed", name: "Boxed set", spec: "Several volumes · in one cloth box", w: 150, h: 196, cloth: "#12213a", inside: "text", kind: "boxed" },
-  { id: "ebook", name: "Ebook", spec: "Any of our books · on every screen", w: 104, h: 168, cloth: "#0c0a3e", inside: "text", kind: "ebook" },
+  { id: "zine", name: "Keepsake zine", spec: "A5 · 16 to 32 pages", w: 115, h: 164, cloth: "#7b1e7a", inside: "zine", use: "A slim keepsake for one story or one occasion, printed for everyone who was there." },
+  { id: "paperback", name: "Paperback", spec: "6 × 9 in · 80 to 250 pages", w: 119, h: 179, cloth: "#8a7f68", inside: "text", use: "Light to hold and easy to post. The copy that gets passed around the family." },
+  { id: "hardcover", name: "Hardcover", spec: "6 × 9 in · sewn, cloth-bound", w: 124, h: 184, cloth: "#0c0a3e", inside: "text", use: "The one that stays on the shelf and gets handed down." },
+  { id: "layflat", name: "Lay-flat photo book", spec: "10 × 10 in · 40 to 160 pages", w: 198, h: 198, cloth: "#12213a", inside: "photo", use: "Opens flat, so a photograph can run across both pages without losing its middle to the gutter." },
+  { id: "coffee", name: "Coffee table book", spec: "12 × 10 in · 120 to 240 pages", w: 238, h: 198, cloth: "#3c1030", inside: "photo", use: "Big photographs and short essays about a brand or a place, made to be picked up and leafed through.", image: "/images/books/corporate-archive.webp" },
+  { id: "slipcase", name: "Slipcase edition", spec: "Any book · in a cloth case", w: 132, h: 192, cloth: "#241033", inside: "text", kind: "slipcase", use: "Your book in a matching cloth case, for gifting or a special edition." },
+  { id: "boxed", name: "Boxed set", spec: "Several volumes · in one cloth box", w: 150, h: 196, cloth: "#12213a", inside: "text", kind: "boxed", use: "When a history is too big for one book, the volumes live together in one cloth box." },
+  { id: "ebook", name: "Ebook", spec: "Any book we make · also on screen", w: 104, h: 168, cloth: "#0c0a3e", inside: "text", kind: "ebook", use: "The same book on screen, for family abroad who can read it the day it is done." },
 ];
 
 /* ─────────────── Questions ─────────────── */

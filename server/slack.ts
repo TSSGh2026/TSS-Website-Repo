@@ -12,11 +12,22 @@ import { OFFER_FIELDS, offerFlags } from "./email";
  * checks its own configuration and stays quiet if it is missing.
  */
 
+/* Every form on the site posts to the one webhook, so the message itself has to say
+   which form it was. Slack shows every message under the webhook app's name,
+   whatever that app happens to be called, so the heading and the page carry it. */
 const TITLES: Record<string, string> = {
-  offer: "New /offer application",
-  join: "New Join submission",
-  talk: "New Contact submission",
-  books: "New /books enquiry",
+  offer: "Website offer: new application",
+  join: "Join the collective: new application",
+  talk: "Contact: new enquiry",
+  books: "Books & Keepsakes: new enquiry",
+};
+
+/** The page each form lives on, shown under the heading. */
+const PAGES: Record<string, string> = {
+  offer: "/offer",
+  join: "/contact",
+  talk: "/contact",
+  books: "/books",
 };
 
 /** Slack renders text as mrkdwn, so the few characters it treats as markup go. */
@@ -59,6 +70,12 @@ export async function sendSlackNotification(
     {
       type: "header",
       text: { type: "plain_text", text: TITLES[formType] || "New submission" },
+    },
+    {
+      type: "context",
+      elements: [
+        { type: "mrkdwn", text: `From www.storyshaperscollective.com${PAGES[formType] ?? ""}` },
+      ],
     },
     { type: "section", text: { type: "mrkdwn", text: headline } },
   ];
