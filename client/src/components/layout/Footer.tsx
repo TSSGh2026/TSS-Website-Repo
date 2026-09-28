@@ -130,6 +130,7 @@ export function Footer() {
                   for it is a reader landing somewhere they did not choose. */}
               <Item href="/team">Team</Item>
               <Item href={act("act-proof")}>The work</Item>
+              <Item href="/books">Books &amp; biographies</Item>
               <Item href="/blog">Blog</Item>
               <Item href="/contact">Contact</Item>
               <Item href="/join">Join the collective</Item>

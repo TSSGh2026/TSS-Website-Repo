@@ -69,6 +69,15 @@
   --color-magenta: #7b1e7a;
   --color-magenta-lift: #942493;
 
+  /* --- /books tokens (additive, used only by the books page; see styles/books.css) --- */
+  --color-ink: #0c0a3e;
+  --color-ink-deep: #06041a;
+  --color-paper: #f4f1ea;
+  --color-paper-2: #ede8dd;
+  --color-magenta-soft: #cf81cd;
+  --color-edge: #ded8cc;
+  --color-muted-ink: #5a5473;
+
   --font-display: 'Zodiak', Georgia, serif;
   --font-body: 'Switzer', system-ui, sans-serif;
 }

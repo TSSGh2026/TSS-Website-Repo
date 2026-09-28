@@ -309,6 +309,7 @@ function SubmissionsViewer() {
     join: { label: "JOIN", color: "#a78bfa", bg: "rgba(167,139,250,0.12)" },
     talk: { label: "TALK", color: "#38bdf8", bg: "rgba(56,189,248,0.12)" },
     offer: { label: "OFFER", color: "#f0abfc", bg: "rgba(240,171,252,0.14)" },
+    books: { label: "BOOKS", color: "#fcd34d", bg: "rgba(252,211,77,0.12)" },
   };
 
   const offerFlags = (data: Record<string, string>) => {
