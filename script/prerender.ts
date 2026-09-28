@@ -75,15 +75,15 @@ const ROUTES: RouteDef[] = [
     route: "/offer",
     title: "One website. ₹80,000. Live in 10 working days. — The Story Shapers",
     description:
-      "Five selected brands this August. A brand website written, designed and built for ₹80,000 all in, live in 10 working days.",
-    image: "/offer-opengraph.jpg?v=2026-08-25",
+      "A brand website with your story at its centre, written, designed and built for ₹80,000 all in, live in 10 working days.",
+    image: "/offer-opengraph.jpg?v=2026-09-28",
   },
   {
     route: "/offer/terms",
-    title: "The August website offer — terms — The Story Shapers",
+    title: "Website offer terms | The Story Shapers",
     description:
-      "The full terms and conditions for The Story Shapers' August website offer: scope, timeline, payment, revisions and cancellation.",
-    image: "/offer-opengraph.jpg?v=2026-08-25",
+      "The full terms and conditions for The Story Shapers' website offer: scope, timeline, payment, revisions and cancellation.",
+    image: "/offer-opengraph.jpg?v=2026-09-28",
   },
 ];
 
