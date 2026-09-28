@@ -67,7 +67,7 @@ const ROUTES: RouteDef[] = [
   { route: "/aakanksha" },
   {
     route: "/books",
-    title: "Books & Biographies | The Story Shapers",
+    title: "Books & Keepsakes | The Story Shapers",
     description:
       "Memoirs, biographies, family and company histories, family photo books and coffee table books, written and made by The Story Shapers. You bring the memories. We find the story.",
   },

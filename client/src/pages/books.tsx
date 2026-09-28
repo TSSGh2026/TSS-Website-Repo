@@ -21,7 +21,7 @@ import { Close } from "@/components/books/close";
 export default function BooksPage() {
   useEffect(() => {
     const previous = document.title;
-    document.title = "Books & Biographies | The Story Shapers";
+    document.title = "Books & Keepsakes | The Story Shapers";
     // in-page links (the nav, "See the books we make") glide rather than jump, on this page only
     const html = document.documentElement;
     const scroll = html.style.scrollBehavior;
