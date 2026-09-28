@@ -16,7 +16,7 @@ export const CALENDLY_URL =
 export const WHATSAPP_NUMBER = "919147740521";
 
 const WHATSAPP_MESSAGE =
-  "Hi Story Shapers — I've just sent in my application for the August website offer.";
+  "Hi Story Shapers, I've just sent in my application for the website offer.";
 
 export const WHATSAPP_URL = WHATSAPP_NUMBER
   ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`
@@ -25,7 +25,6 @@ export const WHATSAPP_URL = WHATSAPP_NUMBER
 export const PRICE = "₹80,000";
 export const BOOKING_FEE = "₹25,000";
 export const BALANCE = "₹55,000";
-export const CLOSES = "31 August 2026";
 export const GOVERNING_CITY = "Bengaluru";
 
 /* ---------------------------------------------------------------------------

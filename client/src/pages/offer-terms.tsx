@@ -29,7 +29,7 @@ const CLAUSES: Clause[] = [
   {
     title: "1. Who we are, and what these terms cover",
     body: [
-      "These Terms & Conditions (“Terms”) govern the website design, copywriting and development engagement offered by The Story Shapers Collective LLP, a limited liability partnership registered in India under the Limited Liability Partnership Act, 2008 with LLP identification number ACW-3552 and registered with limited liability, whose registered office is at 15, Raam Durg, 3rd Main, Jayamahal Extension, Benson Town, Bangalore – 560046, Karnataka, India (“The Story Shapers”, “we”, “us”), under its August 2026 Independence Day offer (the “Offer”) to the person or entity that applies for and confirms a slot (the “Client”, “you”).",
+      "These Terms & Conditions (“Terms”) govern the website design, copywriting and development engagement offered by The Story Shapers Collective LLP, a limited liability partnership registered in India under the Limited Liability Partnership Act, 2008 with LLP identification number ACW-3552 and registered with limited liability, whose registered office is at 15, Raam Durg, 3rd Main, Jayamahal Extension, Benson Town, Bangalore – 560046, Karnataka, India (“The Story Shapers”, “we”, “us”), under its website offer (the “Offer”) to the person or entity that applies for and confirms a slot (the “Client”, “you”).",
       "Submitting an application is not a booking, and we are not obliged to accept it. The alignment call commits neither of us. A contract to deliver the Offer comes into existence only when we confirm a slot to you in writing and your booking fee reaches us in cleared funds, as set out in clause 5.",
       "From that point, these Terms and the written scope note issued after the alignment call together form the whole agreement between us. Where the scope note and these Terms conflict, the scope note prevails on matters of scope alone, for that engagement only, and only where you have confirmed it in writing. The scope note cannot change the fee, the refund position, the intellectual property terms, the limits on our liability or the governing law. Those change only by a written amendment under clause 20.",
     ],
@@ -43,7 +43,7 @@ const CLAUSES: Clause[] = [
       "We write from what you give us. Where the information you supply is not enough for us to write a page properly, we will tell you in writing and ask for more; we are not obliged to research, source or invent it, and time spent waiting for it is a delay on your side for the purposes of clause 6. Clause 8 sets out your responsibility for the accuracy of what you supply.",
       "₹80,000 (Indian Rupees eighty thousand) is the complete professional fee payable to The Story Shapers for the included scope. Third-party costs and excluded services described in these Terms are not included. If our tax registration position changes later, the fee for slots already confirmed does not change.",
       "“Up to five pages” is a ceiling, not a target. If your website needs fewer, the fee is the same, and unused pages cannot be carried forward, exchanged for other work, or given to anyone else.",
-      "The Offer is limited to five (5) Clients, and to one website for one brand each. A slot covers a single brand. Where you own or operate more than one brand, business or trading name, each requires its own slot at its own fee, and a single website covering several brands is outside the Offer. Applications close at 23:59 IST on 31 August 2026. That is the date by which a slot must be confirmed, not the date by which websites are delivered. A slot is personal to you and cannot be sold, transferred or shared.",
+      "The Offer covers one website for one brand. A slot covers a single brand. Where you own or operate more than one brand, business or trading name, each requires its own slot at its own fee, and a single website covering several brands is outside the Offer. A slot is personal to you and cannot be sold, transferred or shared.",
       "We run a limited number of builds at a time, so slots are scheduled in the order in which booking fees are received. Your kickoff date is confirmed in writing before you pay the booking fee. The ten (10) working days are then counted from the start of the clock described in clause 6, which follows your kickoff.",
       "We reserve the right to decline any application at our discretion, including after the alignment call, and to withdraw or modify the Offer for applications not yet confirmed. Withdrawal or modification will not affect slots already confirmed by payment.",
     ],
@@ -244,7 +244,7 @@ const CLAUSES: Clause[] = [
 export default function OfferTermsPage() {
   useEffect(() => {
     const previous = document.title;
-    document.title = "The August website offer — terms — The Story Shapers";
+    document.title = "Website offer terms | The Story Shapers";
     return () => {
       document.title = previous;
     };
@@ -263,11 +263,11 @@ export default function OfferTermsPage() {
 
         <p className="o-eyebrow mt-14 text-white/35">TERMS &amp; CONDITIONS</p>
         <h1 className="o-display mt-6 text-[32px] leading-[1.14] sm:text-[42px]">
-          The August website offer,{" "}
+          The website offer,{" "}
           <span className="font-body font-light text-white/70">in full.</span>
         </h1>
         <p className="mt-8 font-mono text-[11.5px] uppercase tracking-[1.6px] text-white/35">
-          Last updated 14 August 2026 · The Story Shapers Collective LLP
+          Last updated 28 September 2026 · The Story Shapers Collective LLP
         </p>
 
         <div className="mt-16 space-y-12">

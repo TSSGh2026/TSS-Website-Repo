@@ -11,7 +11,7 @@ import { Footer } from "@/components/offer/sections/footer";
 import { StickyCta } from "@/components/offer/sticky-cta";
 
 /**
- * The Independence Day offer landing page.
+ * The website offer landing page: a standing offer, no deadline and no cap on brands.
  *
  * Deliberately self-contained: no site Navbar, no site Footer, no exit links.
  * The only ways off this page are the apply form, Calendly, WhatsApp and

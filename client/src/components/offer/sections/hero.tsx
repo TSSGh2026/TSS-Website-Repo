@@ -153,12 +153,12 @@ export function Hero() {
 
         <div className="flex flex-1 flex-col justify-center py-14 md:py-24 lg:max-w-[600px]">
           <Reveal delay={1}>
-            {/* The scarcity strip — the one line that must not whisper. */}
+            {/* What the offer is, in one line. A standing offer: no deadline, no count. */}
             <p className="o-eyebrow text-white/70">
-              INDEPENDENCE DAY OFFER
+              THE WEBSITE OFFER
               <span className="hidden sm:inline"> · </span>
               <span className="mt-1.5 block sm:mt-0 sm:inline">
-                FIVE SELECTED BRANDS
+                ₹80,000 ALL IN
               </span>
             </p>
           </Reveal>
