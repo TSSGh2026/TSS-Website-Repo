@@ -66,6 +66,12 @@ const ROUTES: RouteDef[] = [
   { route: "/shaili" },
   { route: "/aakanksha" },
   {
+    route: "/books",
+    title: "Books & Biographies | The Story Shapers",
+    description:
+      "Memoirs, biographies, family and company histories, family photo books and coffee table books, written and made by The Story Shapers. You bring the memories. We find the story.",
+  },
+  {
     route: "/offer",
     title: "One website. ₹80,000. Live in 10 working days. — The Story Shapers",
     description:

@@ -1,0 +1,56 @@
+/* =========================================================================
+   /books: memoirs, biographies, family and company histories, coffee table books
+
+   Scoped to .books-page so nothing here leaks into the rest of the site. The
+   colour tokens it uses (ink, paper, edge, muted-ink ...) are declared in
+   index.css next to the /offer tokens, because Tailwind v4 only reads @theme
+   from the root stylesheet.
+
+   The labels (.kicker) take var(--font-mono), which the site maps to Switzer on
+   purpose ("only two families"), so this page follows the site's rule.
+   ========================================================================= */
+
+.books-page {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+/* In the site's `components` layer on purpose: Tailwind's utilities layer comes after it,
+   so a size or colour set on one label (text-[9px], tracking-[...]) still wins over these defaults.
+   Unlayered, these would beat every utility on the page. */
+@layer components {
+.books-scope ::selection { background: #cf81cd; color: #0c0a3e; }
+.books-scope :focus-visible { outline: 2px solid var(--color-magenta); outline-offset: 3px; }
+
+.books-scope .kicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
+.books-scope .display { font-family: var(--font-display); font-weight: 400; letter-spacing: -0.015em; line-height: 1.02; }
+.books-scope .measure { max-width: 62ch; }
+.books-scope .books-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+}
+}
+
+/* THE SHELF'S SIZE, IN CSS ON PURPOSE.
+   The books are built at full size in hero.tsx and the whole shelf is scaled with
+   `zoom`, which (unlike transform) also shrinks the space it takes up. It lives here
+   rather than in a number measured in JavaScript because the page is prerendered at
+   1440x900: a measured scale would paint a desktop shelf on a phone until React
+   arrived. --z is the scale; the group labels under the plank read it too. */
+.books-shelf-wrap { --z: 1; }
+.books-shelf { zoom: var(--z); }
+@media (max-width: 1023px) { .books-shelf-wrap { --z: 0.8; } }
+@media (max-width: 639px) { .books-shelf-wrap { --z: 0.6; } }
+/* short laptop screens: keep the shelf and its labels above the fold */
+@media (min-width: 1024px) and (max-height: 899px) { .books-shelf-wrap { --z: 0.84; } }
+@media (min-width: 1024px) and (max-height: 819px) { .books-shelf-wrap { --z: 0.74; } }
+
+/* Spine lettering never renders below 9px, however small the shelf gets.
+   Under zoom a size is multiplied by --z, so the floor is divided by it. */
+.books-scope .books-spine-type { font-size: max(calc(9px / var(--z)), 10.5px); }
+
+/* No stray last words. Headings share their lines out evenly; running text avoids leaving
+   one word alone on the last line ("cloth-bound" under Hardcover, for one). */
+@layer components {
+  .books-scope h1, .books-scope h2, .books-scope h3, .books-scope dt, .books-scope .display { text-wrap: balance; }
+  .books-scope p, .books-scope dd, .books-scope li { text-wrap: pretty; }
+}

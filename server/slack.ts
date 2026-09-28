@@ -16,6 +16,7 @@ const TITLES: Record<string, string> = {
   offer: "New /offer application",
   join: "New Join submission",
   talk: "New Contact submission",
+  books: "New /books enquiry",
 };
 
 /** Slack renders text as mrkdwn, so the few characters it treats as markup go. */

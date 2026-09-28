@@ -258,7 +258,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
 
 
   const formSubmissionBody = z.object({
-    formType: z.enum(["join", "talk", "offer"]),
+    formType: z.enum(["join", "talk", "offer", "books"]),
     data: z.record(z.string(), z.string()).refine((d) => Object.keys(d).length <= 20, { message: "Too many fields" }),
   });
 
