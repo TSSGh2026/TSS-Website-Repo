@@ -4,7 +4,7 @@ import { Hero } from "@/components/home/Hero";
 import { ProblemFraming } from "@/components/home/ProblemFraming";
 import { Team } from "@/components/home/Team";
 import { Work } from "@/components/home/Work";
-import { Services } from "@/components/home/Services";
+import { Shapes } from "@/components/home/Shapes";
 import { CTA } from "@/components/home/CTA";
 import { Footer } from "@/components/layout/Footer";
 
@@ -86,7 +86,12 @@ export default function Home() {
             case rail does that job now, with evidence. */}
         <Team />
         <Work />
-        <Services />
+        {/* Act five, where it has always been. The section is the same act with
+            a different cut of the same offer: four disciplines rather than
+            three situations, and every service named rather than eighteen of
+            them. Services.tsx — Shape / Scale / Sharpen — is superseded and
+            unreferenced, the way the CMS rows already are. */}
+        <Shapes />
         <CTA />
         <Footer />
       </main>

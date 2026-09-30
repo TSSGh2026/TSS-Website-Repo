@@ -140,6 +140,7 @@ function peakPhotoUnderBar(): boolean {
 
 const LINKS = [
   { name: "Our Story", href: "/our-story" },
+  { name: "Services", href: "/services" },
   { name: "Team", href: "/team" },
   { name: "Blog", href: "/blog" },
   { name: "Join the collective", href: "/join" },
