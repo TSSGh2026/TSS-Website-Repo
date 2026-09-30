@@ -153,7 +153,7 @@ client/public/images/team/.
 | Ahalya | LinkedIn profile photo, 800px | Her four supplied options sit in the SSC Drive behind a sign-in |
 | Raayed | LinkedIn profile photo, 400px | None supplied |
 | Sreepathy | LinkedIn profile photo, 800px | Supplied one is in an email attachment |
-| Smriti | Behance profile photo, 276px | Softest of the five; replace first. Supplied one is in the Slack partners thread |
+| Smriti | Her own (IMG-20260922-WA0012.jpg), 1066×1600 | Replaced the 276px Behance stand-in on 30 Sep |
 | Priyanshi | Her own, from the folder she shared | IMG-20250505-WA0005.jpg, the seated one |
 
 Fatema asked for LinkedIn photos; each person should still see theirs
