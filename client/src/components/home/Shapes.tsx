@@ -1,10 +1,9 @@
-import { motion, useReducedMotion, useTransform, type MotionValue } from "framer-motion";
+import { type MotionValue } from "framer-motion";
 import { Link } from "wouter";
 import { Act, ActLabel, ActWrap } from "./Act";
 import { DISCIPLINES, type Discipline as Shape } from "@/data/services";
 
 const DEEP = "#09072B";
-const ACCENT = "#cf81cd";
 const SERIF = "'Zodiak', Georgia, serif";
 const SANS = "'Switzer', sans-serif";
 
@@ -57,22 +56,20 @@ export function Shapes() {
   );
 }
 
-function Body({ progress }: { progress: MotionValue<number> }) {
-  const reduced = useReducedMotion();
-
-  const label = useTransform(progress, [0.08, 0.16], [0, 1], { clamp: true });
-  const head = useTransform(progress, [0.13, 0.28], [0, 1], { clamp: true });
-  const headY = useTransform(head, (v) => (1 - v) * 18);
-
+/**
+ * The section paints whole. Fatema, 30 Sep: the columns arriving one by one
+ * on scroll, with the link fading in after them, made the reader wait for a
+ * menu they wanted to take in at a glance. Nothing here is tied to scroll
+ * progress any more; the Act still sets the ground colour and the id.
+ */
+function Body(_: { progress: MotionValue<number> }) {
   return (
     <ActWrap>
-      <motion.div style={reduced ? undefined : { opacity: label }}>
-        <ActLabel className="mb-[1.1rem]" data-testid="text-services-label">
-          {LABEL}
-        </ActLabel>
-      </motion.div>
+      <ActLabel className="mb-[1.1rem]" data-testid="text-services-label">
+        {LABEL}
+      </ActLabel>
 
-      <motion.h2
+      <h2
         style={{
           fontFamily: SERIF,
           fontWeight: 400,
@@ -83,20 +80,19 @@ function Body({ progress }: { progress: MotionValue<number> }) {
           color: "#FFFFFF",
           marginTop: 0,
           marginBottom: "clamp(2.6rem, 5.5vh, 4rem)",
-          ...(reduced ? null : { opacity: head, y: headY }),
         }}
         data-testid="text-services-heading"
       >
         {HEADING}
-      </motion.h2>
+      </h2>
 
       <div className="grid grid-cols-1 gap-y-[clamp(2.4rem,4.5vh,3.2rem)] sm:grid-cols-2 lg:grid-cols-4">
         {DISCIPLINES.map((s, i) => (
-          <Discipline key={s.id} shape={s} index={i} progress={progress} />
+          <Discipline key={s.id} shape={s} index={i} />
         ))}
       </div>
 
-      <Close progress={progress} />
+      <Close />
     </ActWrap>
   );
 }
@@ -114,23 +110,9 @@ function Body({ progress }: { progress: MotionValue<number> }) {
  * phone it becomes a rule on top, which is the same rule doing the same job in
  * the only direction left.
  */
-function Discipline({
-  shape,
-  index,
-  progress,
-}: {
-  shape: Shape;
-  index: number;
-  progress: MotionValue<number>;
-}) {
-  const reduced = useReducedMotion();
-
-  const at = 0.28 + 0.07 * index;
-  const opacity = useTransform(progress, [at, at + 0.11], [0, 1], { clamp: true });
-  const y = useTransform(opacity, (v) => (1 - v) * 16);
-
+function Discipline({ shape, index }: { shape: Shape; index: number }) {
   return (
-    <motion.div
+    <div
       className={
         "border-t border-white/[0.13] pt-[1.5rem] sm:border-t-0 sm:pt-0 " +
         (index % 2 === 1 ? "sm:border-l sm:pl-[clamp(1.2rem,2.4vw,2rem)] " : "") +
@@ -140,7 +122,6 @@ function Discipline({
           : "lg:border-l-0 lg:pl-0 ") +
         "lg:pr-[clamp(1rem,1.8vw,1.6rem)]"
       }
-      style={reduced ? undefined : { opacity, y }}
       data-testid={`services-group-${shape.id}`}
     >
       <h3
@@ -194,73 +175,38 @@ function Discipline({
           </li>
         ))}
       </ul>
-    </motion.div>
+    </div>
   );
 }
 
 /**
- * The ways out. Two, and they are not equals.
- *
- * "See everything we do" goes to /services, where the full catalogue lives —
- * the homepage names the flagship three per discipline and sends the reader who
- * is looking for a specific deliverable somewhere that has it. The contact link
- * stays for the reader who already knows.
- *
- * Text links, not filled pills: the closing act's button is the only filled
- * block on this page and it stays that way. The catalogue link is the quieter
- * of the two, white rather than accent, because the conversation is still the
- * point of the page.
+ * One way out, and it is prominent: "See everything we do", to /services.
+ * Fatema's call on 30 Sep, over the earlier pair of quiet text links. The
+ * homepage names the flagship three per discipline; this button is how a
+ * reader looking for anything else gets to it. A filled block in the accent
+ * the navbar's Let's Talk uses, so it reads as the section's action at a
+ * glance rather than as a line of body copy.
  */
-function Close({ progress }: { progress: MotionValue<number> }) {
-  const reduced = useReducedMotion();
-  const opacity = useTransform(progress, [0.58, 0.68], [0, 1], { clamp: true });
-
+function Close() {
   return (
-    <motion.div
-      className="mt-[clamp(2.6rem,5vh,3.6rem)] flex flex-wrap items-baseline gap-x-[2.2rem] gap-y-[1.1rem]"
-      style={reduced ? undefined : { opacity }}
-    >
-      <TextLink href="/services" color="rgba(255,255,255,0.9)" rule="rgba(255,255,255,0.3)" testId="link-services-all">
+    <div className="mt-[clamp(2.6rem,5vh,3.6rem)]">
+      <Link
+        href="/services"
+        className="group/cta inline-flex items-center gap-[0.6rem] rounded bg-secondary no-underline transition-colors duration-200 hover:bg-[#9B3E9A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+        style={{
+          fontFamily: SANS,
+          fontSize: "1rem",
+          fontWeight: 500,
+          color: "#FFFFFF",
+          padding: "0.95rem 1.6rem",
+        }}
+        data-testid="link-services-all"
+      >
         See everything we do
-      </TextLink>
-      <TextLink href="/contact#talk" color={ACCENT} rule="rgba(207,129,205,0.35)" testId="link-services-cta">
-        Tell us what you're working on
-      </TextLink>
-    </motion.div>
-  );
-}
-
-function TextLink({
-  href,
-  color,
-  rule,
-  testId,
-  children,
-}: {
-  href: string;
-  color: string;
-  rule: string;
-  testId: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group/cta inline-flex items-baseline gap-[0.45rem] no-underline transition-colors duration-200"
-      style={{
-        fontFamily: SANS,
-        fontSize: "0.95rem",
-        fontWeight: 500,
-        color,
-        borderBottom: `1px solid ${rule}`,
-        paddingBottom: "0.15rem",
-      }}
-      data-testid={testId}
-    >
-      {children}
-      <span aria-hidden="true" className="transition-transform duration-200 group-hover/cta:translate-x-1">
-        →
-      </span>
-    </Link>
+        <span aria-hidden="true" className="transition-transform duration-200 group-hover/cta:translate-x-1">
+          →
+        </span>
+      </Link>
+    </div>
   );
 }
