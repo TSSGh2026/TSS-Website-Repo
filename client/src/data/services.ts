@@ -202,11 +202,11 @@ const ALL: Discipline[] = [
          has a named person for. Fatema's call whether this line stays. */
       {
         id: "growth",
-        /* HELD, not live. Nothing on the case rail shows TSS paid-media or CRM
-           results yet, and the pressure test's point stands: a line a
-           prospect cannot ask for proof of is a line that costs trust. Flip
-           this off when Fatema says it ships. */
-        held: true,
+        /* Live from 30 Sep, Fatema's call, delivered with Raayed (growth &
+           performance marketing, on /team). Not in the services doc; sourced
+           from the old Scale card and his craft. No TSS case study shows
+           paid or CRM results yet, so the first one that does belongs on
+           the rail. */
         name: "Growth & performance",
         promise:
           "Put paid spend behind a story that already works, and keep the customers it brings in.",

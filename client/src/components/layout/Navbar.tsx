@@ -319,9 +319,15 @@ export function Navbar() {
           dropped the reader at the top of the page, on the job-application
           form, because losing the hash also let the router's scroll-to-top run.
           The contact page lands its own hash now, so the link is just a link. */}
+      {/* The site's standard button — the pill the mobile menu, the closing act,
+          the services act and the 404 page all use — at nav size. It was a
+          square-cornered block in the darker purple, the last button on the
+          site in a second style (Fatema, 30 Sep). */}
       <Link
         href={CONTACT.form}
-        className="hidden md:flex items-center justify-center px-6 py-2.5 rounded text-sm font-medium transition-colors bg-secondary text-white border border-secondary hover:bg-[#9B3E9A] hover:border-[#9B3E9A]"
+        className="hidden md:inline-flex items-center justify-center rounded-full px-6 py-2.5 text-sm no-underline transition-colors duration-200 hover:bg-[#e0a0de] focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-white"
+        style={{ backgroundColor: ACCENT, color: NAVY, fontWeight: 600 }}
+        data-testid="link-nav-contact"
       >
         Let's Talk
       </Link>

@@ -147,9 +147,8 @@ function MovementLabel({ id, children }: { id: string; children: React.ReactNode
  * it is set here in the first, like the others, and otherwise hers.
  *
  * PORTRAITS, 30 Sep: Priyanshi's is her own, from the folder she shared.
- * Smriti's is her Behance profile photograph (the Behance link is the one
- * she supplied); it is only 276px at source, so it is the softest of the five
- * and the first to replace when she sends one.
+ * Smriti's is the one she sent (IMG-20260922-WA0012.jpg, 30 Sep), replacing
+ * a 276px Behance stand-in.
  * Ahalya's, Sreepathy's and Raayed's are their LinkedIn profile photographs
  * (Fatema's call — the supplied ones sat behind a Google sign-in and an
  * inbox). All four are cropped to the same head-and-shoulders 4:5 so the
