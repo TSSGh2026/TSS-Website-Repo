@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Link } from "wouter";
 import { motion, useReducedMotion } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -8,9 +7,9 @@ import {
   type Discipline,
   type ServiceLine,
 } from "@/data/services";
+import { PillLink } from "@/components/home/Shapes";
 
 const BG = "#0C0A3E";
-const ACCENT = "#cf81cd";
 const BORDER = "rgba(255,255,255,0.12)";
 const MUTED = "rgba(255,255,255,0.62)";
 const SERIF = "'Zodiak', Georgia, serif";
@@ -298,47 +297,32 @@ function Line({ line, first }: { line: ServiceLine; first: boolean }) {
   );
 }
 
+/* Centred, with the site's standard pill: the same close the homepage's
+   services act and its final act use, so a button looks like one button
+   everywhere. */
 function Close() {
   return (
-    /* Padding outside, rule inside, so the rule spans the same measure as the
-       disciplines' rules above it rather than running 1.5rem wider each side. */
-    <section
-      style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 1.5rem 7rem" }}
-    >
-      <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: "4.5rem" }}>
+    <section style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 1.5rem 7rem" }}>
+      <div
+        className="flex flex-col items-center text-center"
+        style={{ borderTop: `1px solid ${BORDER}`, paddingTop: "4.5rem" }}
+      >
         <p
           style={{
             fontFamily: SERIF,
             fontSize: "clamp(1.5rem, 2.6vw, 2.1rem)",
             lineHeight: 1.25,
             letterSpacing: "-0.015em",
-            margin: "0 0 1.6rem",
+            margin: "0 0 1.8rem",
             maxWidth: "22ch",
             textWrap: "balance",
           }}
         >
           Most briefs cross more than one of these.
         </p>
-        <Link
-          href="/contact#talk"
-          className="group/cta inline-flex items-baseline gap-[0.45rem] no-underline"
-          style={{
-            fontSize: "0.95rem",
-            fontWeight: 500,
-            color: ACCENT,
-            borderBottom: "1px solid rgba(207,129,205,0.35)",
-            paddingBottom: "0.15rem",
-          }}
-          data-testid="link-services-page-cta"
-        >
-          Tell us what you're working on
-          <span
-            aria-hidden="true"
-            className="transition-transform duration-200 group-hover/cta:translate-x-1"
-          >
-            →
-          </span>
-        </Link>
+        <PillLink href="/contact#talk" testId="link-services-page-cta">
+          Tell us what you’re working on
+        </PillLink>
       </div>
     </section>
   );

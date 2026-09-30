@@ -181,32 +181,46 @@ function Discipline({ shape, index }: { shape: Shape; index: number }) {
 
 /**
  * One way out, and it is prominent: "See everything we do", to /services.
- * Fatema's call on 30 Sep, over the earlier pair of quiet text links. The
- * homepage names the flagship three per discipline; this button is how a
- * reader looking for anything else gets to it. A filled block in the accent
- * the navbar's Let's Talk uses, so it reads as the section's action at a
- * glance rather than as a line of body copy.
+ * Fatema's call on 30 Sep. It is the site's standard button — the pill the
+ * closing act and the 404 page use (the lighter accent, navy type, fully
+ * rounded) — and it sits centred under the four columns, as buttons do
+ * everywhere else on the site. A square-cornered button in the navbar's
+ * darker purple was a second button style, and she caught it.
  */
 function Close() {
   return (
-    <div className="mt-[clamp(2.6rem,5vh,3.6rem)]">
-      <Link
-        href="/services"
-        className="group/cta inline-flex items-center gap-[0.6rem] rounded bg-secondary no-underline transition-colors duration-200 hover:bg-[#9B3E9A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-        style={{
-          fontFamily: SANS,
-          fontSize: "1rem",
-          fontWeight: 500,
-          color: "#FFFFFF",
-          padding: "0.95rem 1.6rem",
-        }}
-        data-testid="link-services-all"
-      >
+    <div className="mt-[clamp(2.6rem,5vh,3.6rem)] flex justify-center">
+      <PillLink href="/services" testId="link-services-all">
         See everything we do
-        <span aria-hidden="true" className="transition-transform duration-200 group-hover/cta:translate-x-1">
-          →
-        </span>
-      </Link>
+      </PillLink>
     </div>
+  );
+}
+
+/** The site's standard button, as on the 404 page and the closing act. */
+export function PillLink({
+  href,
+  testId,
+  children,
+}: {
+  href: string;
+  testId: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="inline-flex min-h-12 items-center gap-[0.6rem] rounded-full px-[2rem] py-[1.05rem] no-underline transition-colors duration-200 hover:bg-[#e0a0de] focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-white"
+      style={{
+        backgroundColor: "#cf81cd",
+        color: "#0C0A3E",
+        fontFamily: SANS,
+        fontSize: "1rem",
+        fontWeight: 600,
+      }}
+      data-testid={testId}
+    >
+      {children} <span aria-hidden="true">→</span>
+    </Link>
   );
 }
