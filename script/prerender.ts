@@ -45,6 +45,12 @@ const ROUTES: RouteDef[] = [
   },
   { route: "/team" },
   {
+    route: "/services",
+    title: "Services | The Story Shapers",
+    description:
+      "Brand strategy, websites, content and editorial, social and launches, SEO and AEO, growth, and the content systems behind them. Everything The Story Shapers collective does.",
+  },
+  {
     route: "/contact",
     title: "Contact | The Story Shapers",
     description:

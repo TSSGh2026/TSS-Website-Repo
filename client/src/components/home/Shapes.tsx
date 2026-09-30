@@ -1,6 +1,7 @@
 import { motion, useReducedMotion, useTransform, type MotionValue } from "framer-motion";
 import { Link } from "wouter";
 import { Act, ActLabel, ActWrap } from "./Act";
+import { DISCIPLINES, type Discipline as Shape } from "@/data/services";
 
 const DEEP = "#09072B";
 const ACCENT = "#cf81cd";
@@ -28,9 +29,9 @@ const SANS = "'Switzer', sans-serif";
  * first — Tuisa, Social, LBB, CCPL and Headout are positioning and narrative
  * problems, not procurement.
  *
- * So the constraint is the fix. Three per discipline, each one something a
- * case study up the page already proves. The other thirty-two are still in
- * this file, under `rest`, waiting for a /services page to be their home.
+ * So the constraint is the fix. Three per discipline, named literally, and a
+ * link out to /services for everything else. The disciplines and the three
+ * live in data/services.ts, which /services reads too.
  *
  * WHAT THE EARLIER ATTEMPTS GOT WRONG, so none of it comes back:
  *
@@ -45,112 +46,8 @@ const SANS = "'Switzer', sans-serif";
  *   this many it is a tacky one. White space and alignment do the same work.
  */
 
-type Shape = {
-  id: string;
-  label: string;
-  line: string;
-  /** what goes on the homepage. Three, and they are the flagship three. */
-  lead: string[];
-  /** everything else this discipline covers. NOT rendered here — it is the
-   *  contents of a /services page that does not exist yet. Kept in one place
-   *  so that page has a source when it is built, and so nobody has to go back
-   *  to the brief to reconstruct it. */
-  rest: string[];
-};
-
 const LABEL = "Services";
 const HEADING = "The many shapes a story can take.";
-
-/**
- * THREE EACH, AND THE THREE ARE CHOSEN AGAINST THE CASE STUDIES.
- *
- * Every flagship below is something one of the five cases up the page actually
- * is. Tuisa and Social are positioning. CCPL is a launch. LBB is editorial
- * holding a verdict. Headout is an operating model — ten times the output at
- * the same headcount. Nothing here is a capability we have to claim; it is all
- * a capability the rail already proves.
- */
-const SHAPES: Shape[] = [
-  {
-    id: "brand",
-    label: "Brand",
-    line: "Make people understand why you, not someone else.",
-    lead: ["Positioning & brand narrative", "Naming & verbal identity", "Go-to-market strategy"],
-    rest: [
-      "Brand strategy",
-      "Tone of voice",
-      "Audience & category research",
-      "Competitive positioning",
-      "Brand architecture",
-      "Campaign platforms",
-      "Brand guidelines & playbooks",
-    ],
-  },
-  {
-    id: "content",
-    label: "Content",
-    line: "Give the brand something worth saying. Consistently.",
-    lead: [
-      "Website copy & content architecture",
-      "Editorial & thought leadership",
-      "Social & campaigns",
-    ],
-    rest: [
-      "Website redesign",
-      "Blogs",
-      "Newsletters",
-      "CRM & lifecycle content",
-      "Product & PDP content",
-      "Landing pages & conversion copy",
-      "Video & creative direction",
-      "Ghostwriting",
-      "Editorial calendars & franchises",
-    ],
-  },
-  {
-    id: "discovery",
-    /* The brief closed this list with "Getting discovered is useful. Being the
-       answer is better." and opened it with "Make sure the right people can
-       actually find it." They say the same thing and only one of them says it
-       with a point of view, so the closing line is now the only line. */
-    label: "Discovery",
-    line: "Getting discovered is useful. Being the answer is better.",
-    lead: ["SEO strategy & content", "AEO & AI discoverability", "Conversion content & CRO"],
-    rest: [
-      "Search-led content architecture",
-      "Keyword & search-intent strategy",
-      "Content audits & opportunity mapping",
-      "Blog & editorial SEO",
-      "Programmatic & scaled content",
-      "Product discovery content",
-      "Landing-page optimisation",
-      "Content optimisation",
-      "Measurement & performance frameworks",
-    ],
-  },
-  {
-    id: "systems",
-    label: "Systems",
-    line: "Make good work possible at scale.",
-    lead: [
-      "Content operating models",
-      "AI-assisted content systems",
-      "Fractional content & brand leadership",
-    ],
-    /* "Measurement frameworks" was here and in Discovery. Two disciplines
-       selling the same thing under two names is a seam, and it stays next to
-       the search work whose performance it measures. */
-    rest: [
-      "Editorial workflows",
-      "Templates & playbooks",
-      "Content governance & QA",
-      "Team structures & processes",
-      "AI workflow design",
-      "Scalable content production",
-      "Ongoing editorial direction",
-    ],
-  },
-];
 
 export function Shapes() {
   return (
@@ -194,7 +91,7 @@ function Body({ progress }: { progress: MotionValue<number> }) {
       </motion.h2>
 
       <div className="grid grid-cols-1 gap-y-[clamp(2.4rem,4.5vh,3.2rem)] sm:grid-cols-2 lg:grid-cols-4">
-        {SHAPES.map((s, i) => (
+        {DISCIPLINES.map((s, i) => (
           <Discipline key={s.id} shape={s} index={i} progress={progress} />
         ))}
       </div>
@@ -301,15 +198,17 @@ function Discipline({
 }
 
 /**
- * The way out, and the only action in the section.
+ * The ways out. Two, and they are not equals.
  *
- * The old version put a link under every stage — "Start with Shape" and
- * friends — because those were three situations and which one you recognised
- * was most of the first reply. These are four disciplines, nobody arrives
- * wanting exactly one of them, so it is one link.
+ * "See everything we do" goes to /services, where the full catalogue lives —
+ * the homepage names the flagship three per discipline and sends the reader who
+ * is looking for a specific deliverable somewhere that has it. The contact link
+ * stays for the reader who already knows.
  *
- * A text link, not a filled pill: the closing act's button is the only filled
- * block on this page and it stays that way.
+ * Text links, not filled pills: the closing act's button is the only filled
+ * block on this page and it stays that way. The catalogue link is the quieter
+ * of the two, white rather than accent, because the conversation is still the
+ * point of the page.
  */
 function Close({ progress }: { progress: MotionValue<number> }) {
   const reduced = useReducedMotion();
@@ -317,30 +216,50 @@ function Close({ progress }: { progress: MotionValue<number> }) {
 
   return (
     <motion.div
-      className="mt-[clamp(2.6rem,5vh,3.6rem)]"
+      className="mt-[clamp(2.6rem,5vh,3.6rem)] flex flex-wrap items-baseline gap-x-[2.2rem] gap-y-[1.1rem]"
       style={reduced ? undefined : { opacity }}
     >
-      <Link
-        href="/contact#talk"
-        className="group/cta inline-flex items-baseline gap-[0.45rem] no-underline transition-colors duration-200"
-        style={{
-          fontFamily: SANS,
-          fontSize: "0.95rem",
-          fontWeight: 500,
-          color: ACCENT,
-          borderBottom: "1px solid rgba(207,129,205,0.35)",
-          paddingBottom: "0.15rem",
-        }}
-        data-testid="link-services-cta"
-      >
+      <TextLink href="/services" color="rgba(255,255,255,0.9)" rule="rgba(255,255,255,0.3)" testId="link-services-all">
+        See everything we do
+      </TextLink>
+      <TextLink href="/contact#talk" color={ACCENT} rule="rgba(207,129,205,0.35)" testId="link-services-cta">
         Tell us what you're working on
-        <span
-          aria-hidden="true"
-          className="transition-transform duration-200 group-hover/cta:translate-x-1"
-        >
-          →
-        </span>
-      </Link>
+      </TextLink>
     </motion.div>
+  );
+}
+
+function TextLink({
+  href,
+  color,
+  rule,
+  testId,
+  children,
+}: {
+  href: string;
+  color: string;
+  rule: string;
+  testId: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group/cta inline-flex items-baseline gap-[0.45rem] no-underline transition-colors duration-200"
+      style={{
+        fontFamily: SANS,
+        fontSize: "0.95rem",
+        fontWeight: 500,
+        color,
+        borderBottom: `1px solid ${rule}`,
+        paddingBottom: "0.15rem",
+      }}
+      data-testid={testId}
+    >
+      {children}
+      <span aria-hidden="true" className="transition-transform duration-200 group-hover/cta:translate-x-1">
+        →
+      </span>
+    </Link>
   );
 }

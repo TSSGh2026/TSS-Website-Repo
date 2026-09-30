@@ -128,6 +128,7 @@ export function Footer() {
               {/* /team, not #act-peak — the same destination the nav's "Team"
                   uses. Two names for one idea is survivable; two DESTINATIONS
                   for it is a reader landing somewhere they did not choose. */}
+              <Item href="/services">Services</Item>
               <Item href="/team">Team</Item>
               <Item href={act("act-proof")}>The work</Item>
               <Item href="/books">Books &amp; keepsakes</Item>

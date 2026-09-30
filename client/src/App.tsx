@@ -19,6 +19,7 @@ import TeamPage from "@/pages/team";
 import OfferPage from "@/pages/offer";
 import OfferTermsPage from "@/pages/offer-terms";
 import BooksPage from "@/pages/books";
+import ServicesPage from "@/pages/services";
 
 const PORTFOLIO_SLUGS = ["fatema", "shaili", "aakanksha"];
 
@@ -46,6 +47,7 @@ function Router() {
         <Route path="/contact" component={Contact} />
         <Route path="/blog" component={Blog} />
         <Route path="/team" component={TeamPage} />
+        <Route path="/services" component={ServicesPage} />
         <Route path="/blog/:slug" component={BlogPostPage} />
         <Route path="/offer/terms" component={OfferTermsPage} />
         <Route path="/offer" component={OfferPage} />

@@ -1,0 +1,299 @@
+import { useEffect } from "react";
+import { Link } from "wouter";
+import { motion, useReducedMotion } from "framer-motion";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import {
+  DISCIPLINES,
+  type Discipline,
+  type ServiceLine,
+} from "@/data/services";
+
+const BG = "#0C0A3E";
+const ACCENT = "#cf81cd";
+const BORDER = "rgba(255,255,255,0.12)";
+const MUTED = "rgba(255,255,255,0.62)";
+const SERIF = "'Zodiak', Georgia, serif";
+const SANS = "'Switzer', sans-serif";
+
+/**
+ * /services — THE CATALOGUE.
+ *
+ * The homepage names what we specialise in: four disciplines, three things
+ * under each. This page is where everything else went, so the homepage could
+ * stay short without the long tail disappearing. It is the page a reader lands
+ * on when they are looking for one specific deliverable, and the page search
+ * engines and AI answers read when somebody asks who writes newsletters or
+ * builds content operations.
+ *
+ * Same four disciplines as the homepage, in the same order, so clicking through
+ * opens what you just read rather than re-cutting it. Inside each, the service
+ * lines from the services doc: a name, the one sentence it is for, and its
+ * scope.
+ *
+ * The scope lists are long by design and they are still subject to the rules
+ * the homepage learned: nothing behind a click, no numerals, no counts, no
+ * dashes. They are set small, in columns, as an index, so the eye reads the
+ * names and promises first and drops into a list only when it wants to.
+ */
+export default function ServicesPage() {
+  useEffect(() => {
+    document.title = "Services | The Story Shapers";
+  }, []);
+
+  return (
+    <div
+      style={{
+        backgroundColor: BG,
+        color: "#FFFFFF",
+        minHeight: "100vh",
+        fontFamily: SANS,
+      }}
+      data-testid="page-services"
+    >
+      <Navbar />
+
+      <header
+        style={{
+          padding: "9rem 1.5rem 4.5rem",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "0.6rem",
+            letterSpacing: "0.25em",
+            textTransform: "uppercase",
+            color: MUTED,
+            marginBottom: "1.5rem",
+          }}
+        >
+          Services
+        </div>
+        <h1
+          style={{
+            fontFamily: SERIF,
+            fontSize: "clamp(2.4rem, 5vw, 4rem)",
+            lineHeight: 1.08,
+            fontWeight: 400,
+            letterSpacing: "-0.02em",
+            margin: "0 0 1.6rem",
+          }}
+        >
+          What we do.
+        </h1>
+        {/* The services doc's own intro, shortened. Its last sentence restated
+            the four disciplines that the page is about to show, so it went. */}
+        <p
+          style={{
+            fontSize: "1.05rem",
+            lineHeight: 1.7,
+            color: MUTED,
+            maxWidth: "620px",
+            margin: 0,
+            textWrap: "pretty",
+          }}
+          data-testid="text-services-intro"
+        >
+          There’s more than one way to shape a story. Sometimes it means working
+          out what a brand should stand for. Sometimes it means rewriting a
+          website, running social, starting a newsletter or fixing a CRM
+          journey. And sometimes it means building the workflows and AI systems
+          that make all of it possible at scale.
+        </p>
+
+        {/* Where each discipline starts. Plain anchors, visible, in reading
+            order — a table of contents, not a set of tabs. */}
+        <nav aria-label="Disciplines" style={{ marginTop: "2.6rem" }}>
+          <ul className="m-0 flex list-none flex-wrap gap-x-[1.8rem] gap-y-[0.6rem] p-0">
+            {DISCIPLINES.map((d) => (
+              <li key={d.id}>
+                <a
+                  href={`#${d.id}`}
+                  className="transition-colors duration-200 hover:text-[#cf81cd]"
+                  style={{
+                    fontFamily: SERIF,
+                    fontSize: "1.15rem",
+                    color: "rgba(255,255,255,0.88)",
+                    textDecoration: "none",
+                    borderBottom: `1px solid ${BORDER}`,
+                    paddingBottom: "0.1rem",
+                  }}
+                  data-testid={`link-services-jump-${d.id}`}
+                >
+                  {d.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </header>
+
+      <main
+        style={{ padding: "0 1.5rem", maxWidth: "1100px", margin: "0 auto" }}
+      >
+        {DISCIPLINES.map((d) => (
+          <DisciplineSection key={d.id} discipline={d} />
+        ))}
+      </main>
+
+      <Close />
+      <Footer />
+    </div>
+  );
+}
+
+/**
+ * One discipline: its name and line on the left, held while its service lines
+ * scroll past on the right. On a phone the two stack.
+ */
+function DisciplineSection({ discipline }: { discipline: Discipline }) {
+  return (
+    <section
+      id={discipline.id}
+      aria-labelledby={`h-${discipline.id}`}
+      className="grid grid-cols-1 gap-y-[1.8rem] lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)] lg:gap-x-[3.5rem]"
+      style={{
+        borderTop: `1px solid ${BORDER}`,
+        padding: "3.5rem 0 4rem",
+        scrollMarginTop: "6rem",
+      }}
+      data-testid={`services-discipline-${discipline.id}`}
+    >
+      <div className="lg:sticky lg:top-[7rem] lg:self-start">
+        <h2
+          id={`h-${discipline.id}`}
+          style={{
+            fontFamily: SERIF,
+            fontWeight: 400,
+            fontSize: "clamp(2rem, 3.4vw, 2.8rem)",
+            lineHeight: 1.05,
+            letterSpacing: "-0.022em",
+            margin: 0,
+          }}
+        >
+          {discipline.label}
+        </h2>
+        <p
+          style={{
+            fontSize: "0.98rem",
+            lineHeight: 1.55,
+            color: MUTED,
+            margin: "0.9rem 0 0",
+            maxWidth: "30ch",
+            textWrap: "pretty",
+          }}
+        >
+          {discipline.line}
+        </p>
+      </div>
+
+      <div>
+        {discipline.lines.map((line, i) => (
+          <Line key={line.id} line={line} first={i === 0} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Line({ line, first }: { line: ServiceLine; first: boolean }) {
+  const reduced = useReducedMotion();
+  return (
+    <motion.article
+      initial={reduced ? false : { opacity: 0, y: 16 }}
+      whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.5 }}
+      style={{
+        borderTop: first ? "none" : `1px solid ${BORDER}`,
+        paddingTop: first ? 0 : "2.2rem",
+        paddingBottom: "2.2rem",
+      }}
+      data-testid={`services-line-${line.id}`}
+    >
+      <h3
+        style={{
+          fontFamily: SERIF,
+          fontWeight: 400,
+          fontSize: "clamp(1.3rem, 1.9vw, 1.55rem)",
+          lineHeight: 1.2,
+          letterSpacing: "-0.012em",
+          margin: 0,
+        }}
+      >
+        {line.name}
+      </h3>
+      <p
+        style={{
+          fontSize: "1rem",
+          lineHeight: 1.6,
+          color: "rgba(255,255,255,0.8)",
+          margin: "0.7rem 0 1.5rem",
+          maxWidth: "56ch",
+          textWrap: "pretty",
+        }}
+      >
+        {line.promise}
+      </p>
+      {/* An index, not a list of bullets: columns, small, no markers. */}
+      <ul
+        className="m-0 list-none columns-1 gap-x-[2rem] p-0 sm:columns-2 xl:columns-3"
+        style={{ fontSize: "0.86rem", lineHeight: 1.45, color: MUTED }}
+      >
+        {line.scope.map((item) => (
+          <li key={item} style={{ breakInside: "avoid", padding: "0.28rem 0" }}>
+            {item}
+          </li>
+        ))}
+      </ul>
+    </motion.article>
+  );
+}
+
+function Close() {
+  return (
+    /* Padding outside, rule inside, so the rule spans the same measure as the
+       disciplines' rules above it rather than running 1.5rem wider each side. */
+    <section
+      style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 1.5rem 7rem" }}
+    >
+      <div style={{ borderTop: `1px solid ${BORDER}`, paddingTop: "4.5rem" }}>
+        <p
+          style={{
+            fontFamily: SERIF,
+            fontSize: "clamp(1.5rem, 2.6vw, 2.1rem)",
+            lineHeight: 1.25,
+            letterSpacing: "-0.015em",
+            margin: "0 0 1.6rem",
+            maxWidth: "22ch",
+            textWrap: "balance",
+          }}
+        >
+          Most briefs cross more than one of these.
+        </p>
+        <Link
+          href="/contact#talk"
+          className="group/cta inline-flex items-baseline gap-[0.45rem] no-underline"
+          style={{
+            fontSize: "0.95rem",
+            fontWeight: 500,
+            color: ACCENT,
+            borderBottom: "1px solid rgba(207,129,205,0.35)",
+            paddingBottom: "0.15rem",
+          }}
+          data-testid="link-services-page-cta"
+        >
+          Tell us what you're working on
+          <span
+            aria-hidden="true"
+            className="transition-transform duration-200 group-hover/cta:translate-x-1"
+          >
+            →
+          </span>
+        </Link>
+      </div>
+    </section>
+  );
+}
