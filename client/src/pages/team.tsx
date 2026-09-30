@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { imageSrc, fallbackToOriginal } from "@/lib/image-src";
 import { Footer } from "@/components/layout/Footer";
 import { Link } from "wouter";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { useEffect } from "react";
 
@@ -49,13 +49,25 @@ export default function TeamPage() {
         <h1 style={{ fontFamily: "'Zodiak', serif", fontSize: "clamp(2.4rem, 5vw, 4rem)", lineHeight: 1.1, fontWeight: 400, letterSpacing: "-0.02em", marginBottom: "1.5rem" }}>
           Meet the team.
         </h1>
+        {/* Was "Three senior strategists", then "Senior strategists, and the
+            specialists they work with" — which ranked the second movement
+            under the first in the page's opening line. Now it names the crafts
+            on the page, every one of them, as one team. The belief sentence is
+            Fatema's; only its list changed, from the founders' three crafts
+            to "craft". */}
         <p style={{ fontSize: "1.05rem", lineHeight: 1.7, color: MUTED, maxWidth: "560px", margin: "0 auto" }}>
-          Three senior strategists. One shared belief: that the best brand work happens when strategy, content, and editorial thinking move together.
+          Strategists, writers, designers and growth marketers, working as one team. One shared belief: that the best brand work happens when strategy, content and craft move together.
         </p>
       </section>
 
-      {/* MEMBER CARDS */}
-      <section style={{ padding: "0 1.5rem 7rem", maxWidth: "1100px", margin: "0 auto" }}>
+      {/* MOVEMENT ONE — THE SHAPERS.
+          Card chrome, portfolio links, full weight. These three are on every
+          engagement, and the page has to say so before it says anything else. */}
+      <section
+        style={{ padding: "0 1.5rem 0", maxWidth: "1100px", margin: "0 auto" }}
+        aria-labelledby="movement-shapers"
+      >
+        <MovementLabel id="movement-shapers">The Shapers</MovementLabel>
         {isLoading ? (
           <div style={{ textAlign: "center", color: MUTED, fontFamily: "'Switzer', sans-serif", fontSize: "0.7rem", letterSpacing: "0.2em", padding: "4rem 0" }}>
             LOADING…
@@ -74,12 +86,380 @@ export default function TeamPage() {
         )}
       </section>
 
+      {/* MOVEMENT TWO — THE SPECIALISTS. */}
+      <Specialists />
+
       <Footer />
     </div>
   );
 }
 
+/**
+ * The small uppercase rule that names a movement. Both movements carry one, so
+ * neither reads as the page's default state with the other appended to it.
+ *
+ * An h2, and that is structural rather than cosmetic. As a div it contributed
+ * nothing to the outline, which ran h1 "Meet the team" then three founder h2s
+ * then the specialists' h3s — so a screen reader announced Ahalya, Sreepathy and
+ * Raayeed as children of Aakanksha's card. Two parallel movements read as one
+ * founder with three people filed underneath her, which is the exact opposite of
+ * what the section is for. With the labels as the only h2s, each movement owns
+ * its own branch and the people inside it sit at the same depth.
+ */
+function MovementLabel({ id, children }: { id: string; children: React.ReactNode }) {
+  return (
+    <h2
+      id={id}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "1rem",
+        margin: "0 0 2rem",
+        fontFamily: "'Switzer', sans-serif",
+        fontSize: "0.6rem",
+        fontWeight: 400,
+        letterSpacing: "0.25em",
+        textTransform: "uppercase",
+        color: MUTED,
+      }}
+    >
+      <span style={{ whiteSpace: "nowrap" }}>{children}</span>
+      <span style={{ flex: 1, height: "1px", backgroundColor: BORDER }} aria-hidden="true" />
+    </h2>
+  );
+}
+
+/**
+ * THE SPECIALISTS, as supplied in "Story Shapers | Website component copy"
+ * (30 Sep 2026), in Fatema's format from the partner-format thread: photograph,
+ * zone of expertise, name, three to four lines about them, first person, no
+ * links. Order is the doc's.
+ *
+ * Edited to fit, and every edit is listed in
+ * .design/team-expansion/COPY-DECK.md against the words each person sent:
+ *   - the eyebrows are cut to a craft that reads at a glance (the supplied ones
+ *     ran from three words to twelve)
+ *   - the bios are trimmed to four lines, in their own voice
+ *   - Smriti sent one line; hers is filled from her public Behance and needs
+ *     her yes before it ships
+ *
+ * Priyanshi added her own entry to the doc on 30 Sep, in the third person;
+ * it is set here in the first, like the others, and otherwise hers.
+ *
+ * PORTRAITS, 30 Sep: Priyanshi's is her own, from the folder she shared.
+ * Smriti's is her Behance profile photograph (the Behance link is the one
+ * she supplied); it is only 276px at source, so it is the softest of the five
+ * and the first to replace when she sends one.
+ * Ahalya's, Sreepathy's and Raayed's are their LinkedIn profile photographs
+ * (Fatema's call — the supplied ones sat behind a Google sign-in and an
+ * inbox). All four are cropped to the same head-and-shoulders 4:5 so the
+ * row reads as one set, in client/public/images/team/.
+ *
+ * Hardcoded rather than wired to the CMS on purpose. The portfolios table has no
+ * create route and no "add member" button in the dashboard — the founders' three
+ * rows were seeded straight into the database — so a CMS-backed specialist is a
+ * separate piece of work.
+ */
+type Specialist = {
+  name: string;
+  discipline: string;
+  does: string;
+  portrait?: string;
+};
+
+const SPECIALISTS: Specialist[] = [
+  {
+    name: "Ahalya Acharya",
+    discipline: "Copy & storytelling",
+    portrait: "/images/team/ahalya.webp",
+    does: "Every project, campaign, social post or video needs a story, and I love finding the words for each chapter, long or short. My favourite challenge is breaking down something complex, or ideas that seem unrelated, into a story worth remembering.",
+  },
+  {
+    name: "Mohammed Raayed",
+    discipline: "Growth & performance marketing",
+    portrait: "/images/team/raayed.webp",
+    does: "I’m a growth marketer with over ten years in performance marketing, go-to-market and customer acquisition, across D2C, SaaS, food-tech and consumer apps. I launch brands and products, build acquisition funnels, run paid media, and use data to improve performance across channels.",
+  },
+  {
+    name: "Sreepathy Paliath",
+    discipline: "Food writing & marketing operations",
+    portrait: "/images/team/sreepathy.webp",
+    does: "I’m a marketer and lifestyle writer. I’ve led marketing for multi-brand F&B businesses, across campaigns, content, launches, partnerships and the operations behind them. My writing is about food, travel, culture and the experiences that bring people together.",
+  },
+  {
+    name: "Smriti Krishna",
+    discipline: "Brand & content design",
+    portrait: "/images/team/smriti.webp",
+    does: "I design editorial and brand work, from magazines and reports to presentations and campaigns, and make content clear, engaging and visual.",
+  },
+  {
+    name: "Priyanshi Bosamia",
+    discipline: "Creative strategy & social media",
+    does: "I’m a creative strategist working across content, culture and storytelling, turning ideas into work that’s as interesting as it is good-looking. I believe good content starts with a strong idea and earns its place on the internet, even if it’s just to make someone laugh.",
+    portrait: "/images/team/priyanshi.webp",
+  },
+];
+
+/**
+ * MOVEMENT TWO — THE SPECIALISTS.
+ *
+ * WHY THIS TIER IS A ROW AND NOT A SMALLER CARD
+ *
+ * The first build of this section differentiated the specialists from the
+ * founders entirely by SUBTRACTION: no card, no border, no link, no client list,
+ * smaller photograph. Every single difference was something taken away, and a
+ * design review put the obvious to it — nothing that is only ever less reads as
+ * a different KIND of thing. It reads as a lesser one. These are three real
+ * people who agreed to be featured, and "principals, and then the staff" is the
+ * one sentence this page must not accidentally say.
+ *
+ * So the tier changes grammar instead of dropping weight. The founders are
+ * portrait-above-text in a bordered card; the specialists are a horizontal index
+ * — photograph left, craft and name and line beside it, a hairline between
+ * entries. Landscape against portrait, a rule against a border. It is legible at
+ * a glance as a different form rather than a shrunken one, and the weight
+ * difference falls out of the form rather than being the point of it.
+ *
+ * It also fixes three things the column version could not. The rows span the
+ * container, so there are no interior columns to disagree with the card grid
+ * above. The line gets a real measure instead of the 28 characters it had in a
+ * 47%-wide phone column. And a fourth, fifth or sixth specialist is simply
+ * another row, where the old flex layout would have thrown a partial last row to
+ * opposite edges of the container.
+ *
+ * WHY THE DISCIPLINE IS THE LOUDEST THING IN THE ROW
+ *
+ * It is the reason the tier exists — the one element that says this is a
+ * different category of person rather than a junior version of the category
+ * above. In the first build it was set at 0.55rem, the smallest type on the page,
+ * so the load-bearing information was also the least visible. It now leads the
+ * row at 0.7rem with the name beneath it.
+ *
+ * WHY THERE IS STILL NO CLIENT LIST HERE
+ *
+ * A brands line is the heaviest credibility element on the founders' side and
+ * the main thing giving those cards their authority. Granting it here would pull
+ * the two tiers level again. If a specialist's client list is strong enough to
+ * need publishing, that is an argument for giving them a full card, not for
+ * thickening this one.
+ */
+function Specialists() {
+  return (
+    <section
+      style={{ padding: "7.5rem 1.5rem 7rem", maxWidth: "1100px", margin: "0 auto" }}
+      aria-labelledby="movement-specialists"
+      data-testid="section-specialists"
+    >
+      <MovementLabel id="movement-specialists">The Specialists</MovementLabel>
+
+      {/* THE STANDFIRST, AND WHAT IT LEARNED.
+          Two earlier drafts both failed the same way. "Every engagement runs
+          through the three above ... these are the people we bring in" made the
+          founders the agent and the specialists the object. Rewriting it to
+          "each of these specialists owns a craft the work depends on" fixed the
+          grammar and kept the disease: it was still a sentence whose job was to
+          rank, and Fatema called it — a reader does not need the pecking order
+          explained to them on the way in.
+
+          The premise underneath both drafts was wrong. They existed to defend
+          the homepage's "You work with us directly. Not someone we've briefed."
+          against the arrival of three more faces, by establishing who was
+          permanent. But that promise is about not being handed to a stranger,
+          and the strongest answer to it is not a hierarchy — it is that none of
+          these people are strangers to each other. One collective on the brief
+          keeps the promise better than a ranking ever did.
+
+          Left-aligned under the label rather than centred between the movements.
+          Centred Zodiak at 620px is the most declarative treatment this site
+          has, and the page was spending it twice in one scroll. */}
+      <p
+        style={{
+          fontFamily: "'Zodiak', serif",
+          fontSize: "clamp(1.15rem, 1.9vw, 1.4rem)",
+          lineHeight: 1.5,
+          fontWeight: 400,
+          letterSpacing: "-0.01em",
+          color: "rgba(255,255,255,0.85)",
+          maxWidth: "600px",
+          margin: "0 0 3.5rem",
+          /* Balanced so a wrap never leaves one word on its own line. */
+          textWrap: "balance",
+        }}
+        data-testid="text-specialists-hinge"
+      >
+        The collective that holds your story together.
+      </p>
+
+      <div>
+        {SPECIALISTS.map((s, idx) => (
+          <SpecialistRow key={s.name} specialist={s} idx={idx} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/** "Sreepathy Paliath" → "SP". One name → its first two letters, "Sm". Two
+ *  identical "S" tiles side by side read as generated; two letters do not. */
+function initials(name: string) {
+  const parts = name.trim().split(/\s+/);
+  return parts.length > 1
+    ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+    : name.slice(0, 2);
+}
+
+function SpecialistRow({ specialist, idx }: { specialist: Specialist; idx: number }) {
+  /* The house pattern — five components under components/offer/ gate their
+     entrance animations on this and this page did not. A row that starts at
+     opacity 0 and never animates is a row that is never read. */
+  const reduced = useReducedMotion();
+  const key = specialist.name.split(" ")[0].toLowerCase();
+
+  return (
+    <motion.article
+      initial={reduced ? false : { opacity: 0, y: 20 }}
+      whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.5, delay: idx * 0.08 }}
+      /* A rule between entries rather than around them. The founders' cards are
+         bordered on all four sides; an index is ruled between its items, and the
+         distinction is doing real work here. */
+      style={{
+        display: "grid",
+        gridTemplateColumns: "auto minmax(0, 1fr)",
+        /* Any height the photograph adds over craft + name + bio goes under the
+           bio, not between the name and the bio — a two-line bio (Smriti's)
+           otherwise floated a gap's width away from the name it belongs to. */
+        gridTemplateRows: "auto 1fr",
+        /* Columns only. The bio is its own grid item in a second row, and the
+           h3's bottom margin is the space above it from sm up. */
+        columnGap: "clamp(1.25rem, 3vw, 2.25rem)",
+        alignItems: "start",
+        padding: "2rem 0",
+        borderTop: idx === 0 ? "none" : `1px solid ${BORDER}`,
+      }}
+      data-testid={`specialist-entry-${key}`}
+    >
+      {/* 4:5 at 120px lands 150 tall against the founders' 337x253. Smaller on
+          every axis, which the column version was not — at 220 wide it was 275
+          tall, 22px TALLER than a founder's photograph, and on a page read by
+          scrolling the eye takes height for weight. */}
+      <div
+        className="w-[88px] sm:row-span-2 sm:w-[120px]"
+        style={{ aspectRatio: "4/5", overflow: "hidden", borderRadius: "2px", flexShrink: 0 }}
+      >
+        {specialist.portrait ? (
+          <img
+            src={imageSrc(specialist.portrait, "lg")}
+            onError={fallbackToOriginal(specialist.portrait)}
+            alt={specialist.name}
+            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 20%" }}
+            data-testid={`img-specialist-${key}`}
+          />
+        ) : (
+          /* The awaiting-a-photograph state, and it has to survive being seen:
+             three of these are live from the day the tier ships until the last
+             submission lands. An initial set in the page's own serif reads as a
+             held place; a grey box reads as a bug.
+
+             The tint came down from 0.16 to 0.10 because at the old value three
+             of these were the most saturated fields on a page built on restraint
+             — a held place should recede, not advertise. The initial went up from
+             0.28 to 0.40 alpha, which takes it from 2.42:1 to 3.67:1 and over the
+             3:1 floor for large text. aria-hidden because a screen reader
+             announcing "A" before "Ahalya" is noise; the name follows in text. */
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(123,30,122,0.10)",
+              display: "grid",
+              placeItems: "center",
+            }}
+            data-testid={`placeholder-specialist-${key}`}
+          >
+            <span
+              aria-hidden="true"
+              style={{
+                fontFamily: "'Zodiak', serif",
+                fontSize: "1.5rem",
+                letterSpacing: "0.04em",
+                lineHeight: 1,
+                fontWeight: 400,
+                color: "rgba(255,255,255,0.40)",
+              }}
+            >
+              {initials(specialist.name)}
+            </span>
+          </div>
+        )}
+      </div>
+
+      <div>
+        {/* No reserved second line any more. The old two-line minHeight existed
+            to keep names aligned across a row of columns; rows have no
+            neighbours to align with, so a discipline that wraps costs nothing
+            and the dead air under the short ones is gone. */}
+        {/* Tighter on a phone, where "Growth & performance marketing" at 0.2em
+            broke onto a second line beside an 88px photograph. */}
+        <div
+          className="text-[0.66rem] tracking-[0.14em] sm:text-[0.7rem] sm:tracking-[0.2em]"
+          style={{
+            fontFamily: "'Switzer', sans-serif",
+            lineHeight: 1.4,
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.75)",
+            marginBottom: "0.5rem",
+          }}
+          data-testid={`text-specialist-discipline-${key}`}
+        >
+          {specialist.discipline}
+        </div>
+
+        <h3
+          style={{
+            fontFamily: "'Zodiak', serif",
+            fontSize: "clamp(1.15rem, 2vw, 1.35rem)",
+            lineHeight: 1.2,
+            fontWeight: 400,
+            letterSpacing: "-0.01em",
+            margin: "0 0 0.6rem",
+          }}
+          data-testid={`text-specialist-name-${key}`}
+        >
+          {specialist.name}
+        </h3>
+      </div>
+
+        {/* Not clamped. A clamp cut every bio mid-sentence on a phone, and a
+            silent cut on a real person's own words is not a risk worth
+            keeping at any width. The copy deck holds each one to about four
+            lines at 62ch instead. */}
+        {/* Below sm the bio leaves the column beside the photograph and runs
+            the full row under it: ~250px wide it ran seven to ten lines, at
+            the full width it runs four or five. The photograph stays LEFT of
+            the craft and name, never above them, because portrait-above-text
+            is the founders' form and borrowing it would erase the one
+            difference in grammar that keeps this from reading as a tier. */}
+        <p
+          className="col-span-2 mt-4 sm:col-span-1 sm:col-start-2 sm:mt-0"
+          style={{
+            fontSize: "0.85rem",
+            lineHeight: 1.6,
+            color: MUTED,
+            margin: 0,
+            maxWidth: "62ch",
+          }}
+          data-testid={`text-specialist-does-${key}`}
+        >
+          {specialist.does}
+        </p>
+    </motion.article>
+  );
+}
+
 function MemberCard({ member, idx }: { member: PortfolioSummary; idx: number }) {
+  const reduced = useReducedMotion();
   const portrait = (member.hero as HeroBlock).portrait;
   const subtext = (member.hero as HeroBlock).subtext;
 
@@ -103,10 +483,21 @@ function MemberCard({ member, idx }: { member: PortfolioSummary; idx: number }) 
   // needs even after the zoom. The card already clips.
   const photoZoom = member.slug === "aakanksha" ? 1.45 : 1;
 
+  // A portfolio is worth linking to when there is something on it. Stats and
+  // about paragraphs are the two blocks the summary endpoint exposes, and every
+  // founder record carries both several times over.
+  const hasPortfolio = Boolean(
+    (member.stats as StatsBlock)?.items?.length ||
+      (member.about as AboutBlock)?.paragraphs?.length,
+  );
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      /* Gated, like the specialist rows and like the five components under
+         components/offer/. It was unconditional here, which is the one way an
+         entrance animation can cost a reader the content entirely. */
+      initial={reduced ? false : { opacity: 0, y: 24 }}
+      whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: idx * 0.08 }}
       style={{
@@ -145,7 +536,12 @@ function MemberCard({ member, idx }: { member: PortfolioSummary; idx: number }) 
           {member.name}
         </div>
 
-        <h2 style={{ fontFamily: "'Zodiak', serif", fontSize: "1.15rem", lineHeight: 1.25, fontWeight: 400, letterSpacing: "-0.01em", margin: 0 }} data-testid={`text-member-name-${member.slug}`}>
+        {/* h3, not h2. The movement labels are the page's two h2s now, so a
+            founder headline at that level would sit BESIDE its own section
+            heading rather than inside it — and the specialists' h3s would file
+            themselves under the last founder. Same size, same weight, same
+            face; only the outline changes. */}
+        <h3 style={{ fontFamily: "'Zodiak', serif", fontSize: "1.15rem", lineHeight: 1.25, fontWeight: 400, letterSpacing: "-0.01em", margin: 0 }} data-testid={`text-member-name-${member.slug}`}>
           {(member.hero as HeroBlock).headlineLine1 || member.name}
           {(member.hero as HeroBlock).headlineLine2 && (
             <>
@@ -158,7 +554,7 @@ function MemberCard({ member, idx }: { member: PortfolioSummary; idx: number }) 
               </span>
             </>
           )}
-        </h2>
+        </h3>
 
         {subtext && (
           <p style={{ fontSize: "0.8rem", lineHeight: 1.55, color: MUTED, margin: 0, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" } as React.CSSProperties} data-testid={`text-member-subtext-${member.slug}`}>
@@ -166,6 +562,13 @@ function MemberCard({ member, idx }: { member: PortfolioSummary; idx: number }) 
           </p>
         )}
 
+        {/* Rendered unconditionally until now, which was safe only because every
+            row in the table happened to be a founder with a full portfolio
+            behind it. The moment a card exists for someone who has sent a photo
+            and two lines and nothing else, an unconditional link promises a
+            page that is empty when you get there. Both movements can grow, so
+            the guard belongs here rather than in the caller. */}
+        {hasPortfolio && (
         <div style={{ marginTop: "auto", paddingTop: "0.75rem" }}>
           <Link
             href={`/${member.slug}`}
@@ -187,6 +590,7 @@ function MemberCard({ member, idx }: { member: PortfolioSummary; idx: number }) 
             View full portfolio →
           </Link>
         </div>
+        )}
       </div>
     </motion.div>
   );
