@@ -49,12 +49,14 @@ export default function TeamPage() {
         <h1 style={{ fontFamily: "'Zodiak', serif", fontSize: "clamp(2.4rem, 5vw, 4rem)", lineHeight: 1.1, fontWeight: 400, letterSpacing: "-0.02em", marginBottom: "1.5rem" }}>
           Meet the team.
         </h1>
-        {/* Was "Three senior strategists." A hardcoded count on a page that is
-            about to hold six people is a claim that goes stale the day a fourth
-            face lands, so the number is gone and the second sentence — which is
-            Fatema's and still true — stays exactly as it was. */}
+        {/* Was "Three senior strategists", then "Senior strategists, and the
+            specialists they work with" — which ranked the second movement
+            under the first in the page's opening line. Now it names the crafts
+            on the page, every one of them, as one team. The belief sentence is
+            Fatema's; only its list changed, from the founders' three crafts
+            to "craft". */}
         <p style={{ fontSize: "1.05rem", lineHeight: 1.7, color: MUTED, maxWidth: "560px", margin: "0 auto" }}>
-          Senior strategists, and the specialists they work with. One shared belief: that the best brand work happens when strategy, content and craft move together.
+          Strategists, writers, designers and growth marketers, working as one team. One shared belief: that the best brand work happens when strategy, content and craft move together.
         </p>
       </section>
 
@@ -160,22 +162,22 @@ const SPECIALISTS: Specialist[] = [
   {
     name: "Ahalya Acharya",
     discipline: "Copy & storytelling",
-    does: "Every project, campaign, social post or video needs a story, and I love giving each chapter its words, long or short. My favourite challenge is taking something complex, or ideas that seem unrelated, and writing a story worth remembering.",
+    does: "Every project, campaign, social post or video needs a story, and I love finding the words for each chapter, long or short. My favourite challenge is breaking down something complex, or ideas that seem unrelated, into a story worth remembering.",
   },
   {
     name: "Mohammed Raayed",
     discipline: "Growth & performance marketing",
-    does: "I’m a growth marketer with over ten years in performance marketing, go-to-market and customer acquisition, across D2C, SaaS, food-tech and consumer apps. I launch brands and products, build acquisition funnels, run paid media, and use the data to improve every channel.",
+    does: "I’m a growth marketer with over ten years in performance marketing, go-to-market and customer acquisition, across D2C, SaaS, food-tech and consumer apps. I launch brands and products, build acquisition funnels, run paid media, and use data to improve performance across channels.",
   },
   {
     name: "Sreepathy Paliath",
-    discipline: "Food & travel writing, marketing operations",
+    discipline: "Food writing & marketing operations",
     does: "I’m a marketer and lifestyle writer. I’ve led marketing for multi-brand F&B businesses, across campaigns, content, launches, partnerships and the operations behind them. My writing is about food, travel, culture and the experiences that bring people together.",
   },
   {
     name: "Smriti",
     discipline: "Brand & content design",
-    does: "I’m a graphic designer working on editorial and brand design, from magazines and reports to presentations, campaigns and event collateral. I make content clear, engaging and visual, in print and on screen.",
+    does: "I design editorial and brand work, from magazines and reports to presentations and campaigns, and make content clear, engaging and visual.",
   },
 ];
 
@@ -279,6 +281,15 @@ function Specialists() {
   );
 }
 
+/** "Sreepathy Paliath" → "SP". One name → its first two letters, "Sm". Two
+ *  identical "S" tiles side by side read as generated; two letters do not. */
+function initials(name: string) {
+  const parts = name.trim().split(/\s+/);
+  return parts.length > 1
+    ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+    : name.slice(0, 2);
+}
+
 function SpecialistRow({ specialist, idx }: { specialist: Specialist; idx: number }) {
   /* The house pattern — five components under components/offer/ gate their
      entrance animations on this and this page did not. A row that starts at
@@ -298,7 +309,9 @@ function SpecialistRow({ specialist, idx }: { specialist: Specialist; idx: numbe
       style={{
         display: "grid",
         gridTemplateColumns: "auto minmax(0, 1fr)",
-        gap: "clamp(1.25rem, 3vw, 2.25rem)",
+        /* Columns only. The bio is its own grid item in a second row, and the
+           h3's bottom margin is the space above it from sm up. */
+        columnGap: "clamp(1.25rem, 3vw, 2.25rem)",
         alignItems: "start",
         padding: "2rem 0",
         borderTop: idx === 0 ? "none" : `1px solid ${BORDER}`,
@@ -310,7 +323,7 @@ function SpecialistRow({ specialist, idx }: { specialist: Specialist; idx: numbe
           tall, 22px TALLER than a founder's photograph, and on a page read by
           scrolling the eye takes height for weight. */}
       <div
-        className="w-[88px] sm:w-[120px]"
+        className="w-[88px] sm:row-span-2 sm:w-[120px]"
         style={{ aspectRatio: "4/5", overflow: "hidden", borderRadius: "2px", flexShrink: 0 }}
       >
         {specialist.portrait ? (
@@ -347,13 +360,14 @@ function SpecialistRow({ specialist, idx }: { specialist: Specialist; idx: numbe
               aria-hidden="true"
               style={{
                 fontFamily: "'Zodiak', serif",
-                fontSize: "1.9rem",
+                fontSize: "1.5rem",
+                letterSpacing: "0.04em",
                 lineHeight: 1,
                 fontWeight: 400,
                 color: "rgba(255,255,255,0.40)",
               }}
             >
-              {specialist.name.charAt(0)}
+              {initials(specialist.name)}
             </span>
           </div>
         )}
@@ -364,11 +378,12 @@ function SpecialistRow({ specialist, idx }: { specialist: Specialist; idx: numbe
             to keep names aligned across a row of columns; rows have no
             neighbours to align with, so a discipline that wraps costs nothing
             and the dead air under the short ones is gone. */}
+        {/* Tighter on a phone, where "Growth & performance marketing" at 0.2em
+            broke onto a second line beside an 88px photograph. */}
         <div
+          className="text-[0.66rem] tracking-[0.14em] sm:text-[0.7rem] sm:tracking-[0.2em]"
           style={{
             fontFamily: "'Switzer', sans-serif",
-            fontSize: "0.7rem",
-            letterSpacing: "0.2em",
             lineHeight: 1.4,
             textTransform: "uppercase",
             color: "rgba(255,255,255,0.75)",
@@ -392,14 +407,20 @@ function SpecialistRow({ specialist, idx }: { specialist: Specialist; idx: numbe
         >
           {specialist.name}
         </h3>
+      </div>
 
-        {/* Four lines at 62ch, which is Fatema's "3-4 lines about them" at the
-            size it is set. Clamped from sm up so a longer submission cannot grow
-            the row. NOT clamped on a phone: beside an 88px photograph the column
-            is ~250px and every bio runs seven to ten lines, so a clamp there
-            cut all four mid-sentence. A long row on a phone is fine; half a
-            sentence about a real person is not. */}
+        {/* Not clamped. A clamp cut every bio mid-sentence on a phone, and a
+            silent cut on a real person's own words is not a risk worth
+            keeping at any width. The copy deck holds each one to about four
+            lines at 62ch instead. */}
+        {/* Below sm the bio leaves the column beside the photograph and runs
+            the full row under it: ~250px wide it ran seven to ten lines, at
+            the full width it runs four or five. The photograph stays LEFT of
+            the craft and name, never above them, because portrait-above-text
+            is the founders' form and borrowing it would erase the one
+            difference in grammar that keeps this from reading as a tier. */}
         <p
+          className="col-span-2 mt-4 sm:col-span-1 sm:col-start-2 sm:mt-0"
           style={{
             fontSize: "0.85rem",
             lineHeight: 1.6,
@@ -407,12 +428,10 @@ function SpecialistRow({ specialist, idx }: { specialist: Specialist; idx: numbe
             margin: 0,
             maxWidth: "62ch",
           }}
-          className="sm:line-clamp-4"
           data-testid={`text-specialist-does-${key}`}
         >
           {specialist.does}
         </p>
-      </div>
     </motion.article>
   );
 }
