@@ -46,9 +46,9 @@ const ROUTES: RouteDef[] = [
   { route: "/team" },
   {
     route: "/services",
-    title: "Services | The Story Shapers",
+    title: "Brand, Content & AEO Consultancy, India | The Story Shapers",
     description:
-      "Brand strategy, websites, content and editorial, social and launches, SEO and AEO, growth, and the content systems behind them. Everything The Story Shapers collective does.",
+      "Brand positioning, websites, blogs, newsletters, social, SEO and AEO content for founders in India and beyond. A senior-led brand and content consultancy.",
   },
   {
     route: "/contact",

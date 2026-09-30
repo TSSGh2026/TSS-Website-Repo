@@ -15,6 +15,9 @@ const BORDER = "rgba(255,255,255,0.12)";
 const MUTED = "rgba(255,255,255,0.62)";
 const SERIF = "'Zodiak', Georgia, serif";
 const SANS = "'Switzer', sans-serif";
+/* Must match the /services entry in script/prerender.ts, or the page swaps
+   the prerendered title for a different one the moment React mounts. */
+const TITLE = "Brand, Content & AEO Consultancy, India | The Story Shapers";
 
 /**
  * /services — THE CATALOGUE.
@@ -38,7 +41,43 @@ const SANS = "'Switzer', sans-serif";
  */
 export default function ServicesPage() {
   useEffect(() => {
-    document.title = "Services | The Story Shapers";
+    document.title = TITLE;
+
+    /* One ItemList of Services, built from data/services.ts so it cannot
+       drift from what the page says. Same head-injection pattern as
+       blog-post.tsx; the prerender snapshots it into the static HTML. */
+    /* Reuse the prerendered tag if it is there. The static HTML already
+       carries one, and createRoot mounts rather than hydrates, so creating a
+       fresh tag every time left two ItemLists on the live page. */
+    let ld = document.querySelector<HTMLScriptElement>("script[data-services-jsonld]");
+    if (!ld) {
+      ld = document.createElement("script");
+      ld.type = "application/ld+json";
+      ld.setAttribute("data-services-jsonld", "true");
+      document.head.appendChild(ld);
+    }
+    ld.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "Services from The Story Shapers",
+      itemListElement: DISCIPLINES.flatMap((d) => d.lines).map((line, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: {
+          "@type": "Service",
+          name: line.name,
+          description: line.promise,
+          serviceType: line.name,
+          areaServed: ["India", "Worldwide"],
+          provider: {
+            "@type": "Organization",
+            name: "The Story Shapers",
+            url: "https://www.storyshaperscollective.com",
+          },
+        },
+      })),
+    });
+    return () => document.querySelector("script[data-services-jsonld]")?.remove();
   }, []);
 
   return (
@@ -62,7 +101,7 @@ export default function ServicesPage() {
       >
         <div
           style={{
-            fontSize: "0.6rem",
+            fontSize: "0.68rem",
             letterSpacing: "0.25em",
             textTransform: "uppercase",
             color: MUTED,
@@ -83,8 +122,9 @@ export default function ServicesPage() {
         >
           What we do.
         </h1>
-        {/* The services doc's own intro, shortened. Its last sentence restated
-            the four disciplines that the page is about to show, so it went. */}
+        {/* The services doc's own intro with its throat-clearing cut: the
+            "more than one way to shape a story" opener and the Sometimes,
+            Sometimes, And sometimes triad went; the literal middle stayed. */}
         <p
           style={{
             fontSize: "1.05rem",
@@ -96,11 +136,9 @@ export default function ServicesPage() {
           }}
           data-testid="text-services-intro"
         >
-          There’s more than one way to shape a story. Sometimes it means working
-          out what a brand should stand for. Sometimes it means rewriting a
-          website, running social, starting a newsletter or fixing a CRM
-          journey. And sometimes it means building the workflows and AI systems
-          that make all of it possible at scale.
+          We work out what a brand should stand for. We also rewrite websites,
+          run social, start newsletters, fix CRM journeys, and build the
+          workflows and AI systems that keep it all running.
         </p>
 
         {/* Where each discipline starts. Plain anchors, visible, in reading
@@ -237,13 +275,21 @@ function Line({ line, first }: { line: ServiceLine; first: boolean }) {
       >
         {line.promise}
       </p>
-      {/* An index, not a list of bullets: columns, small, no markers. */}
+      {/* An index, not a list of bullets: columns, small, no markers.
+          Two columns even on a phone, where one ran Brand to seventeen rows
+          and was the one place the page read as a laundry list. The hanging
+          indent makes a wrapped item read as one item, not two: with the
+          gap between items about equal to the leading, "Homepage, product &
+          service / pages" looked like two entries. */}
       <ul
-        className="m-0 list-none columns-1 gap-x-[2rem] p-0 sm:columns-2 xl:columns-3"
-        style={{ fontSize: "0.86rem", lineHeight: 1.45, color: MUTED }}
+        className="m-0 list-none columns-2 gap-x-[1.25rem] p-0 text-[0.82rem] sm:gap-x-[2rem] sm:text-[0.86rem] xl:columns-3"
+        style={{ lineHeight: 1.3, color: MUTED }}
       >
         {line.scope.map((item) => (
-          <li key={item} style={{ breakInside: "avoid", padding: "0.28rem 0" }}>
+          <li
+            key={item}
+            style={{ breakInside: "avoid", padding: "0.4rem 0 0.4rem 0.8em", textIndent: "-0.8em" }}
+          >
             {item}
           </li>
         ))}

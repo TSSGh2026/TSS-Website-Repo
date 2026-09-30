@@ -27,6 +27,8 @@ export type ServiceLine = {
   /** one sentence: what the line is for, in the client's terms */
   promise: string;
   scope: string[];
+  /** held off the page until Fatema decides it should be there */
+  held?: boolean;
 };
 
 export type Discipline = {
@@ -39,7 +41,7 @@ export type Discipline = {
   lines: ServiceLine[];
 };
 
-export const DISCIPLINES: Discipline[] = [
+const ALL: Discipline[] = [
   {
     id: "brand",
     label: "Brand",
@@ -115,7 +117,7 @@ export const DISCIPLINES: Discipline[] = [
         id: "editorial",
         name: "Content & editorial",
         promise:
-          "Give the brand something worth saying, and a reason to keep saying it. The subjects, formats and editorial systems that keep content useful.",
+          "Decide what the brand should publish, then write it: blogs, newsletters, reports and founder columns.",
         scope: [
           "Content strategy",
           "Editorial strategy & positioning",
@@ -141,7 +143,7 @@ export const DISCIPLINES: Discipline[] = [
         id: "social",
         name: "Social, campaigns & launches",
         promise:
-          "Take the strategy out into the world: the channels, ideas and campaigns that carry a brand, a product or a launch.",
+          "Plan and run the social, campaigns and launches that put a brand or product in front of people.",
         scope: [
           "Social media strategy & management",
           "Platform & audience strategy",
@@ -169,7 +171,7 @@ export const DISCIPLINES: Discipline[] = [
     line: "Getting discovered is useful. Being the answer is better.",
     lead: [
       "SEO & AEO content",
-      "AI search visibility",
+      "Content audits & refreshes",
       "Landing pages & conversion copy",
     ],
     lines: [
@@ -177,7 +179,7 @@ export const DISCIPLINES: Discipline[] = [
         id: "search",
         name: "Search, AEO & discovery",
         promise:
-          "Make sure good work can be found, on Google, in AI answers and wherever people now go looking.",
+          "Get found on Google, and cited in ChatGPT, Perplexity and AI Overviews.",
         scope: [
           "SEO, AEO & GEO strategy",
           "SEO content",
@@ -200,6 +202,11 @@ export const DISCIPLINES: Discipline[] = [
          has a named person for. Fatema's call whether this line stays. */
       {
         id: "growth",
+        /* HELD, not live. Nothing on the case rail shows TSS paid-media or CRM
+           results yet, and the pressure test's point stands: a line a
+           prospect cannot ask for proof of is a line that costs trust. Flip
+           this off when Fatema says it ships. */
+        held: true,
         name: "Growth & performance",
         promise:
           "Put paid spend behind a story that already works, and keep the customers it brings in.",
@@ -220,7 +227,7 @@ export const DISCIPLINES: Discipline[] = [
     label: "Systems",
     line: "Make good work possible at scale.",
     lead: [
-      "Content operations",
+      "Content teams & workflows",
       "AI content workflows",
       "Fractional content leadership",
     ],
@@ -229,7 +236,7 @@ export const DISCIPLINES: Discipline[] = [
         id: "systems",
         name: "Thought leadership & content systems",
         promise:
-          "Turn expertise into something people can follow and teams can sustain: the point of view, and the systems that keep it going.",
+          "Turn a founder’s expertise into posts, articles and podcasts, and build the workflows that keep them coming.",
         scope: [
           "Thought-leadership strategy",
           "Founder & personal brand strategy",
@@ -249,3 +256,9 @@ export const DISCIPLINES: Discipline[] = [
     ],
   },
 ];
+
+/** What the pages render: every discipline, minus any service line on hold. */
+export const DISCIPLINES: Discipline[] = ALL.map((d) => ({
+  ...d,
+  lines: d.lines.filter((l) => !l.held),
+}));

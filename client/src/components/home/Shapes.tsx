@@ -166,12 +166,13 @@ function Discipline({
           color: "rgba(255,255,255,0.58)",
           margin: "0.8rem 0 1.7rem",
           textWrap: "pretty",
-          /* Two lines' worth whether it needs two or not. Discovery's line
-             wraps and Systems' does not, so without this the four lists began
-             at three different heights and the columns stopped reading as one
-             band. */
-          minHeight: "3em",
         }}
+        /* Two lines' worth whether it needs two or not, in the four-column
+           band only: there, without it, the four lists began at three
+           different heights. Stacked on a phone there is no band to align,
+           and the reserved line was ~45px of dead air under three of the four
+           disciplines. */
+        className="lg:min-h-[3em]"
         data-testid={`text-services-line-${shape.id}`}
       >
         {shape.line}
