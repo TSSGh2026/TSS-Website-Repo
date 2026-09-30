@@ -54,7 +54,7 @@ export default function TeamPage() {
             face lands, so the number is gone and the second sentence — which is
             Fatema's and still true — stays exactly as it was. */}
         <p style={{ fontSize: "1.05rem", lineHeight: 1.7, color: MUTED, maxWidth: "560px", margin: "0 auto" }}>
-          Senior strategists, and the specialists they work with. One shared belief: that the best brand work happens when strategy, content, and editorial thinking move together.
+          Senior strategists, and the specialists they work with. One shared belief: that the best brand work happens when strategy, content and craft move together.
         </p>
       </section>
 
@@ -128,16 +128,26 @@ function MovementLabel({ id, children }: { id: string; children: React.ReactNode
 }
 
 /**
- * PLACEHOLDER DATA. Every word below is invented to size the layout and none of
- * it is a claim about anybody. It is here so the design can be judged before the
- * real submissions arrive, and it is the first thing to delete when they do —
- * see `.design/team-expansion/PROFILE-BRIEF.md` for what was asked of them.
+ * THE SPECIALISTS, as supplied in "Story Shapers | Website component copy"
+ * (30 Sep 2026), in Fatema's format from the partner-format thread: photograph,
+ * zone of expertise, name, three to four lines about them, first person, no
+ * links. Order is the doc's.
+ *
+ * Edited to fit, and every edit is listed in
+ * .design/team-expansion/COPY-DECK.md against the words each person sent:
+ *   - the eyebrows are cut to a craft that reads at a glance (the supplied ones
+ *     ran from three words to twelve)
+ *   - the bios are trimmed to four lines, in their own voice
+ *   - Smriti sent one line; hers is filled from her public Behance and needs
+ *     her yes before it ships
+ *
+ * Priyanshi is not here yet. She has been asked for her details and has not
+ * sent them, and a row with nothing true in it is worse than no row.
  *
  * Hardcoded rather than wired to the CMS on purpose. The portfolios table has no
  * create route and no "add member" button in the dashboard — the founders' three
  * rows were seeded straight into the database — so a CMS-backed specialist is a
- * separate piece of work, and guessing at the shape of that data before the
- * layout is settled is how you end up migrating it twice.
+ * separate piece of work.
  */
 type Specialist = {
   name: string;
@@ -148,19 +158,24 @@ type Specialist = {
 
 const SPECIALISTS: Specialist[] = [
   {
-    name: "Ahalya",
-    discipline: "Design and art direction",
-    does: "Turns written positioning into a visual system that holds up across every format a brand has to live in.",
+    name: "Ahalya Acharya",
+    discipline: "Copy & storytelling",
+    does: "Every project, campaign, social post or video needs a story, and I love giving each chapter its words, long or short. My favourite challenge is taking something complex, or ideas that seem unrelated, and writing a story worth remembering.",
   },
   {
-    name: "Sreepathy",
-    discipline: "Motion and film",
-    does: "Builds the moving pieces, from brand films to the short cuts that carry a campaign after launch.",
+    name: "Mohammed Raayed",
+    discipline: "Growth & performance marketing",
+    does: "I’m a growth marketer with over ten years in performance marketing, go-to-market and customer acquisition, across D2C, SaaS, food-tech and consumer apps. I launch brands and products, build acquisition funnels, run paid media, and use the data to improve every channel.",
   },
   {
-    name: "Raayeed",
-    discipline: "Photography and production",
-    does: "Shoots the original material a brand needs so its pages stop leaning on stock.",
+    name: "Sreepathy Paliath",
+    discipline: "Food & travel writing, marketing operations",
+    does: "I’m a marketer and lifestyle writer. I’ve led marketing for multi-brand F&B businesses, across campaigns, content, launches, partnerships and the operations behind them. My writing is about food, travel, culture and the experiences that bring people together.",
+  },
+  {
+    name: "Smriti",
+    discipline: "Brand & content design",
+    does: "I’m a graphic designer working on editorial and brand design, from magazines and reports to presentations, campaigns and event collateral. I make content clear, engaging and visual, in print and on screen.",
   },
 ];
 
@@ -269,7 +284,7 @@ function SpecialistRow({ specialist, idx }: { specialist: Specialist; idx: numbe
      entrance animations on this and this page did not. A row that starts at
      opacity 0 and never animates is a row that is never read. */
   const reduced = useReducedMotion();
-  const key = specialist.name.toLowerCase();
+  const key = specialist.name.split(" ")[0].toLowerCase();
 
   return (
     <motion.article
@@ -378,21 +393,21 @@ function SpecialistRow({ specialist, idx }: { specialist: Specialist; idx: numbe
           {specialist.name}
         </h3>
 
-        {/* Clamped to three lines, because PROFILE-BRIEF.md tells all three of
-            them "past about 25 words it clamps" and until now that was simply not
-            true — a long submission would have grown the row instead. */}
+        {/* Four lines at 62ch, which is Fatema's "3-4 lines about them" at the
+            size it is set. Clamped from sm up so a longer submission cannot grow
+            the row. NOT clamped on a phone: beside an 88px photograph the column
+            is ~250px and every bio runs seven to ten lines, so a clamp there
+            cut all four mid-sentence. A long row on a phone is fine; half a
+            sentence about a real person is not. */}
         <p
           style={{
             fontSize: "0.85rem",
             lineHeight: 1.6,
             color: MUTED,
             margin: 0,
-            maxWidth: "48ch",
-            display: "-webkit-box",
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-          } as React.CSSProperties}
+            maxWidth: "62ch",
+          }}
+          className="sm:line-clamp-4"
           data-testid={`text-specialist-does-${key}`}
         >
           {specialist.does}
