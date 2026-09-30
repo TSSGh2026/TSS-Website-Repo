@@ -98,9 +98,8 @@ bans.
 
 ## Smriti
 
-**Name** — only a first name was supplied. Her Behance URL is
-behance.net/SmritiSuresh but the display name there is **Smriti Krishna**. Ask
-her which she wants; everyone else on the page has two names.
+**Name** — **Smriti Krishna**, confirmed by Fatema 30 Sep (only a first name
+was supplied; Krishna is her Behance display name).
 
 **Eyebrow** — supplied: Marketing, Brand & Content Design · on page: **Brand &
 content design**
@@ -124,8 +123,7 @@ is kept as the close.
 
 Added by her to the doc on 30 Sep, in the third person.
 
-**Name** — first name only, like Smriti. A public profile suggests
-Priyanshi Bosamia; confirm with her before a surname goes on the site.
+**Name** — **Priyanshi Bosamia**, confirmed by Fatema 30 Sep.
 
 **Eyebrow** — supplied: Creative Strategy | Content | Social Media · on page:
 **Creative strategy & social media** (the "X & Y" shape of the others)
@@ -191,8 +189,8 @@ sets them against the founders as a tier, Partners claims a commercial
 relationship. Its pick is "The Collective", but the page's hero eyebrow already
 says that, so it would need a change there too.
 
-**Standfirst (B, unchanged):** The collective that holds your story together.
-One team on the brief, from the thinking to the making.
+**Standfirst (A, Fatema 30 Sep):** The collective that holds your story
+together. ("One team on the brief, from the thinking to the making." cut.)
 
 **Hero:** "Senior strategists, and the specialists they work with." →
 "Strategists, writers, designers and growth marketers, working as one team."

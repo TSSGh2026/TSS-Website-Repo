@@ -187,13 +187,13 @@ const SPECIALISTS: Specialist[] = [
     does: "I’m a marketer and lifestyle writer. I’ve led marketing for multi-brand F&B businesses, across campaigns, content, launches, partnerships and the operations behind them. My writing is about food, travel, culture and the experiences that bring people together.",
   },
   {
-    name: "Smriti",
+    name: "Smriti Krishna",
     discipline: "Brand & content design",
     portrait: "/images/team/smriti.webp",
     does: "I design editorial and brand work, from magazines and reports to presentations and campaigns, and make content clear, engaging and visual.",
   },
   {
-    name: "Priyanshi",
+    name: "Priyanshi Bosamia",
     discipline: "Creative strategy & social media",
     does: "I’m a creative strategist working across content, culture and storytelling, turning ideas into work that’s as interesting as it is good-looking. I believe good content starts with a strong idea and earns its place on the internet, even if it’s just to make someone laugh.",
     portrait: "/images/team/priyanshi.webp",
@@ -282,13 +282,12 @@ function Specialists() {
           color: "rgba(255,255,255,0.85)",
           maxWidth: "600px",
           margin: "0 0 3.5rem",
-          /* Without this the last line was the word "on." by itself. Balanced,
-             the three lines even out and the sentence stops ending on a widow. */
+          /* Balanced so a wrap never leaves one word on its own line. */
           textWrap: "balance",
         }}
         data-testid="text-specialists-hinge"
       >
-        The collective that holds your story together. One team on the brief, from the thinking to the making.
+        The collective that holds your story together.
       </p>
 
       <div>
