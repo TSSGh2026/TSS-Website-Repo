@@ -143,8 +143,17 @@ function MovementLabel({ id, children }: { id: string; children: React.ReactNode
  *   - Smriti sent one line; hers is filled from her public Behance and needs
  *     her yes before it ships
  *
- * Priyanshi is not here yet. She has been asked for her details and has not
- * sent them, and a row with nothing true in it is worse than no row.
+ * Priyanshi added her own entry to the doc on 30 Sep, in the third person;
+ * it is set here in the first, like the others, and otherwise hers.
+ *
+ * PORTRAITS, 30 Sep: Priyanshi's is her own, from the folder she shared.
+ * Smriti's is her Behance profile photograph (the Behance link is the one
+ * she supplied); it is only 276px at source, so it is the softest of the five
+ * and the first to replace when she sends one.
+ * Ahalya's, Sreepathy's and Raayed's are their LinkedIn profile photographs
+ * (Fatema's call — the supplied ones sat behind a Google sign-in and an
+ * inbox). All four are cropped to the same head-and-shoulders 4:5 so the
+ * row reads as one set, in client/public/images/team/.
  *
  * Hardcoded rather than wired to the CMS on purpose. The portfolios table has no
  * create route and no "add member" button in the dashboard — the founders' three
@@ -162,22 +171,32 @@ const SPECIALISTS: Specialist[] = [
   {
     name: "Ahalya Acharya",
     discipline: "Copy & storytelling",
+    portrait: "/images/team/ahalya.webp",
     does: "Every project, campaign, social post or video needs a story, and I love finding the words for each chapter, long or short. My favourite challenge is breaking down something complex, or ideas that seem unrelated, into a story worth remembering.",
   },
   {
     name: "Mohammed Raayed",
     discipline: "Growth & performance marketing",
+    portrait: "/images/team/raayed.webp",
     does: "I’m a growth marketer with over ten years in performance marketing, go-to-market and customer acquisition, across D2C, SaaS, food-tech and consumer apps. I launch brands and products, build acquisition funnels, run paid media, and use data to improve performance across channels.",
   },
   {
     name: "Sreepathy Paliath",
     discipline: "Food writing & marketing operations",
+    portrait: "/images/team/sreepathy.webp",
     does: "I’m a marketer and lifestyle writer. I’ve led marketing for multi-brand F&B businesses, across campaigns, content, launches, partnerships and the operations behind them. My writing is about food, travel, culture and the experiences that bring people together.",
   },
   {
     name: "Smriti",
     discipline: "Brand & content design",
+    portrait: "/images/team/smriti.webp",
     does: "I design editorial and brand work, from magazines and reports to presentations and campaigns, and make content clear, engaging and visual.",
+  },
+  {
+    name: "Priyanshi",
+    discipline: "Creative strategy & social media",
+    does: "I’m a creative strategist working across content, culture and storytelling, turning ideas into work that’s as interesting as it is good-looking. I believe good content starts with a strong idea and earns its place on the internet, even if it’s just to make someone laugh.",
+    portrait: "/images/team/priyanshi.webp",
   },
 ];
 
@@ -309,6 +328,10 @@ function SpecialistRow({ specialist, idx }: { specialist: Specialist; idx: numbe
       style={{
         display: "grid",
         gridTemplateColumns: "auto minmax(0, 1fr)",
+        /* Any height the photograph adds over craft + name + bio goes under the
+           bio, not between the name and the bio — a two-line bio (Smriti's)
+           otherwise floated a gap's width away from the name it belongs to. */
+        gridTemplateRows: "auto 1fr",
         /* Columns only. The bio is its own grid item in a second row, and the
            h3's bottom margin is the space above it from sm up. */
         columnGap: "clamp(1.25rem, 3vw, 2.25rem)",

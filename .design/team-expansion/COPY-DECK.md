@@ -122,8 +122,44 @@ is kept as the close.
 
 ## Priyanshi
 
-Not on the page. Asked on 29 Sep, nothing supplied. A public profile that is
-probably hers exists, but nothing she has not sent goes on the site.
+Added by her to the doc on 30 Sep, in the third person.
+
+**Name** — first name only, like Smriti. A public profile suggests
+Priyanshi Bosamia; confirm with her before a surname goes on the site.
+
+**Eyebrow** — supplied: Creative Strategy | Content | Social Media · on page:
+**Creative strategy & social media** (the "X & Y" shape of the others)
+
+**Supplied**
+> Priyanshi is a creative strategist who works across content, culture and
+> storytelling, turning ideas into work that's as interesting as it is
+> good-looking. She believes good content starts with a strong idea and earns
+> its place on the internet — even if it's just to make someone laugh.
+
+**On page** — the same words in the first person, the dash made a comma.
+> I'm a creative strategist working across content, culture and storytelling,
+> turning ideas into work that's as interesting as it is good-looking. I
+> believe good content starts with a strong idea and earns its place on the
+> internet, even if it's just to make someone laugh.
+
+---
+
+## Photographs (30 Sep)
+
+All cropped to the same head-and-shoulders 4:5, re-encoded to WebP (which
+strips camera metadata, including the GPS in Smriti's), in
+client/public/images/team/.
+
+| Who | Source | Note |
+| --- | --- | --- |
+| Ahalya | LinkedIn profile photo, 800px | Her four supplied options sit in the SSC Drive behind a sign-in |
+| Raayed | LinkedIn profile photo, 400px | None supplied |
+| Sreepathy | LinkedIn profile photo, 800px | Supplied one is in an email attachment |
+| Smriti | Behance profile photo, 276px | Softest of the five; replace first. Supplied one is in the Slack partners thread |
+| Priyanshi | Her own, from the folder she shared | IMG-20250505-WA0005.jpg, the seated one |
+
+Fatema asked for LinkedIn photos; each person should still see theirs
+before it ships.
 
 ---
 
