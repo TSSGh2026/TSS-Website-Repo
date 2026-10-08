@@ -4,7 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Link } from "wouter";
 import { motion, useReducedMotion } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
-import { useEffect } from "react";
+import { usePageSeo } from "@/lib/seo";
 
 const BG = "#0C0A3E";
 const ACCENT = "#7B1E7A";
@@ -33,9 +33,14 @@ export default function TeamPage() {
     queryKey: ["/api/portfolios/summaries"],
   });
 
-  useEffect(() => {
-    document.title = "Our Team — The Story Shapers";
-  }, []);
+  /* Must match the /team entry in script/prerender.ts. The description used
+     to be the homepage's, word for word, which told a search engine these
+     were the same page. */
+  usePageSeo("team", {
+    title: "The Story Shapers Team: Strategists, Writers, Designers & Marketers",
+    description:
+      "Meet the collective: strategists, writers, designers and growth marketers working as one team. Founded by Fatema Hanif, Shaili Contractor and Aakanksha Singh Devi.",
+  });
 
   return (
     <div style={{ backgroundColor: BG, color: "#FFFFFF", minHeight: "100vh", fontFamily: "'Switzer', sans-serif" }} data-testid="page-team">

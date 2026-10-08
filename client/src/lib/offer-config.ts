@@ -2,7 +2,10 @@
  * Every outbound link, price and legal constant used by the /offer page and
  * /offer/terms. Change a number here and it changes everywhere.
  */
-export const SITE_URL = "https://storyshaperscollective.com";
+/* www, which is the canonical host. The bare domain answers with a redirect,
+   so every link built from this cost a hop and pointed at a URL that is not
+   the one search engines are told to index. */
+export const SITE_URL = "https://www.storyshaperscollective.com";
 
 /* CONFIRMED CORRECT by Fatema. index.html's Organization JSON-LD matches. */
 export const INSTAGRAM_URL = "https://instagram.com/thestoryshapers";

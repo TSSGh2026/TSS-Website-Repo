@@ -9,7 +9,7 @@ import { MixedHeading, Section } from "../section";
    Fatema's copy, 13 Aug, used as written. Where an answer opens on a short
    line and then explains, that break is hers and is rendered as two
    paragraphs rather than being run together. */
-const ITEMS: QA[] = [
+export const ITEMS: QA[] = [
   {
     q: "Is this offer right for every business?",
     /* Terms clause 4 — the exclusions named here are the ones most likely to

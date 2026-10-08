@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { FAQS, type Faq as FaqItem } from "./content";
 import { EASE, H2, Kicker, Reveal, whatsappFor, Wrap } from "./site";
 
@@ -28,19 +27,24 @@ function Row({ item, open, onToggle }: { item: FaqItem; open: boolean; onToggle:
           +
         </span>
       </button>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.36, ease: EASE }}
-            className="overflow-hidden"
-          >
-            <p className="measure pr-10 pb-7 text-[16px] leading-[1.7] text-muted-ink">{item.a}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* The answer is always in the page, folded shut, rather than mounted
+          on click. Mounted on click, the HTML a search engine or an AI answer
+          engine reads held thirteen questions and no answers — including the
+          one to "How much does a book cost?". A 0fr grid row is the fold: it
+          animates to the answer's own height without measuring anything. */}
+      <div
+        aria-hidden={!open}
+        className="grid"
+        style={{
+          gridTemplateRows: open ? "1fr" : "0fr",
+          opacity: open ? 1 : 0,
+          transition: `grid-template-rows 0.36s cubic-bezier(${EASE.join(",")}), opacity 0.36s cubic-bezier(${EASE.join(",")})`,
+        }}
+      >
+        <div className="overflow-hidden">
+          <p className="measure pr-10 pb-7 text-[16px] leading-[1.7] text-muted-ink">{item.a}</p>
+        </div>
+      </div>
     </div>
   );
 }

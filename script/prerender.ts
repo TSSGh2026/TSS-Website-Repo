@@ -43,7 +43,12 @@ const ROUTES: RouteDef[] = [
     description:
       "How three senior marketers left the agency and corporate ladder to build a collective that does brand strategy the way they always knew it should be done.",
   },
-  { route: "/team" },
+  {
+    route: "/team",
+    title: "The Story Shapers Team: Strategists, Writers, Designers & Marketers",
+    description:
+      "Meet the collective: strategists, writers, designers and growth marketers working as one team. Founded by Fatema Hanif, Shaili Contractor and Aakanksha Singh Devi.",
+  },
   {
     route: "/services",
     title: "Brand, Content & AEO Consultancy, India | The Story Shapers",
@@ -73,9 +78,9 @@ const ROUTES: RouteDef[] = [
   { route: "/aakanksha" },
   {
     route: "/books",
-    title: "Books & Keepsakes | The Story Shapers",
+    title: "Memoir, Family History & Company History Books | The Story Shapers",
     description:
-      "Memoirs, biographies, family and company histories, family photo books and coffee table books, written and made by The Story Shapers. You bring the memories. We find the story.",
+      "Memoirs, biographies, family histories, company histories and coffee table books, interviewed, written, designed and printed for you in India by The Story Shapers.",
   },
   {
     route: "/offer",
@@ -96,7 +101,7 @@ const ROUTES: RouteDef[] = [
 // Published blog articles live in the CMS, so their routes are discovered at
 // build time. Each article page sets its own title/description/canonical/
 // JSON-LD from CMS fields once rendered.
-async function fetchBlogRoutes(): Promise<RouteDef[]> {
+async function fetchBlogRoutes(attempt = 1): Promise<RouteDef[]> {
   try {
     const routes: RouteDef[] = [];
     let page = 1;
@@ -121,6 +126,13 @@ async function fetchBlogRoutes(): Promise<RouteDef[]> {
     console.log(`[prerender] discovered ${routes.length} blog article routes`);
     return routes;
   } catch (err) {
+    // One failed request here used to cost every article its static page and
+    // its sitemap entry for the life of the deploy, without failing anything.
+    if (attempt < 3) {
+      console.warn(`[prerender] blog fetch failed (attempt ${attempt}), retrying:`, err);
+      await new Promise((r) => setTimeout(r, 2000 * attempt));
+      return fetchBlogRoutes(attempt + 1);
+    }
     console.warn("[prerender] could not fetch blog posts; articles will not be prerendered:", err);
     return [];
   }
@@ -169,6 +181,30 @@ export async function writeFallbackShell() {
     .replace(/[ \t]*<meta property="og:url"[^>]*>\n?/i, "");
   await writeFile(path.join(DIST, "app.html"), shell, "utf-8");
   console.log("[prerender] app.html written (SPA fallback shell)");
+
+  // And the page for a URL that is not a page.
+  //
+  // vercel.json used to rewrite every unmatched path to app.html, so a made-up
+  // address, /llms.txt and /favicon.ico all answered 200 with the homepage's
+  // title and an empty #root: a soft 404, and for a crawler asking for a text
+  // file, worse than a miss. The rewrites now name the real routes, and
+  // anything else falls through to this file, which Vercel serves with a 404
+  // status. Same shell, so React still mounts and draws the NotFound page; the
+  // differences are the title, the noindex, and that it describes nothing.
+  //
+  // Written here, beside app.html, so it exists even when prerendering fails
+  // soft. The snapshot loop replaces it with the rendered page when it runs.
+  await writeFile(path.join(DIST, "404.html"), notFoundHead(shell), "utf-8");
+  console.log("[prerender] 404.html written");
+}
+
+/** The shell's head, rewritten for a page that must not be indexed or cited. */
+function notFoundHead(html: string): string {
+  return html
+    .replace(/<title>[\s\S]*?<\/title>/i, "<title>Page not found | The Story Shapers</title>\n    <meta name=\"robots\" content=\"noindex\" />")
+    .replace(/[ \t]*<link rel="canonical"[^>]*>\n?/i, "")
+    .replace(/[ \t]*<meta property="og:url"[^>]*>\n?/i, "")
+    .replace(/[ \t]*<script type="application\/ld\+json"[\s\S]*?<\/script>\n?/gi, "");
 }
 
 async function getBrowser() {
@@ -208,7 +244,9 @@ function startServer(): Promise<{ close: () => void }> {
   });
 
   app.use(express.static(DIST));
-  app.use((_req, res) => res.sendFile(path.join(DIST, "index.html")));
+  // app.html, not index.html: by the time a later route is snapshotted the
+  // loop has overwritten index.html with a full picture of the home page.
+  app.use((_req, res) => res.sendFile(path.join(DIST, "app.html")));
 
   return new Promise((resolve) => {
     const server = app.listen(PORT, () => resolve({ close: () => server.close() }));
@@ -305,6 +343,17 @@ export async function prerender() {
         if (flow) flow.style.removeProperty("font-size");
       })()`);
 
+      // A headline that types itself is snapshotted mid-word, beside the
+      // screen-reader copy of the same sentence, so a text-only crawler read
+      // /offer's h1 as "…do nothing for you. do nothing for you." The typed
+      // half is decoration; the sr-only half is the sentence. Empty the
+      // decoration and the static h1 says it once. React redraws it on mount.
+      await page.evaluate(`(() => {
+        document.querySelectorAll("[data-typed]").forEach((el) => {
+          el.textContent = "";
+        });
+      })()`);
+
       // Per-route head: canonical always, title/description where the SPA
       // doesn't manage them itself
       const headParams = JSON.stringify({
@@ -342,6 +391,23 @@ export async function prerender() {
             ?.setAttribute("content", description);
         }
 
+        // Whatever the page is called by now, its share card is called the
+        // same. /team and the three founder pages set document.title
+        // themselves and nothing else, so all four went out under the
+        // homepage's og:title.
+        const finalTitle = document.title;
+        const finalDescription = document
+          .querySelector('meta[name="description"]')
+          ?.getAttribute("content");
+        for (const sel of ['meta[property="og:title"]', 'meta[name="twitter:title"]']) {
+          document.querySelector(sel)?.setAttribute("content", finalTitle);
+        }
+        if (finalDescription) {
+          for (const sel of ['meta[property="og:description"]', 'meta[name="twitter:description"]']) {
+            document.querySelector(sel)?.setAttribute("content", finalDescription);
+          }
+        }
+
         if (image) {
           document.querySelector('meta[property="og:image"]')
             ?.setAttribute("content", image);
@@ -370,6 +436,17 @@ export async function prerender() {
       await writeFile(outPath, html, "utf-8");
       console.log(`[prerender] ${route} -> ${path.relative(process.cwd(), outPath)} (${(html.length / 1024).toFixed(0)}kb)`);
     }
+
+    // The 404 page, drawn. Any path the router does not know renders NotFound;
+    // the head is then rewritten the same way the bare fallback's was.
+    await page.goto(`http://localhost:${PORT}/this-page-does-not-exist`, {
+      waitUntil: "networkidle0",
+      timeout: 60000,
+    });
+    const notFound =
+      "<!DOCTYPE html>\n" + (await page.evaluate("document.documentElement.outerHTML"));
+    await writeFile(path.join(DIST, "404.html"), notFoundHead(notFound), "utf-8");
+    console.log("[prerender] 404.html rendered");
   } finally {
     if (browser) await browser.close();
     serverHandle.close();
