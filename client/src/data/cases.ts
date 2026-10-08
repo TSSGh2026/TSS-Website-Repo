@@ -4,6 +4,7 @@ import tuisaImg from "@/assets/cases/tuisa.webp";
 import tuisaArchiveImg from "@/assets/cases/tuisa-archive.webp";
 import socialImg from "@/assets/cases/social.webp";
 import ccplImg from "@/assets/cases/ccpl.webp";
+import { CASE_SLUGS } from "@shared/work";
 
 /**
  * THE CASE STUDIES.
@@ -57,6 +58,8 @@ export type Case = {
   impactKind?: "list";
   impact: [string, string][];
   close: string;
+  /** a longer piece about the same work, elsewhere on the site */
+  story?: { href: string; label: string };
 };
 
 export const CASES: Case[] = [
@@ -275,6 +278,10 @@ export const CASES: Case[] = [
     ],
     close:
       "A league nobody had heard of became a thing people planned their weekend around.",
+    story: {
+      href: "/blog/centre-court-pickleball-marketing-case-study",
+      label: "Read the full story",
+    },
   },
 ];
 
@@ -289,14 +296,25 @@ export const CASES: Case[] = [
  */
 export const CASE_ORDER = ["lbb", "social", "ccpl", "headout", "tuisa"];
 
+export type OrderedCase = Case & {
+  n: string;
+  /** the case's own page, /work/<slug> — see shared/work.ts */
+  path: string;
+};
+
 /** In rail order, each with the position number the rail gives it. */
-export const ORDERED_CASES: (Case & { n: string })[] = CASE_ORDER.map((id, i) => {
+export const ORDERED_CASES: OrderedCase[] = CASE_ORDER.map((id, i) => {
   const c = CASES.find((x) => x.id === id);
   if (!c) throw new Error(`CASE_ORDER names a case that does not exist: ${id}`);
+  const slug = CASE_SLUGS[id];
+  if (!slug) throw new Error(`No /work slug for case "${id}" in shared/work.ts`);
   /* the 01..05 on the cards is POSITION in the rail, not an id, so reordering
      the rail renumbers it rather than leaving 02 in front of 01 */
-  return { ...c, n: `0${i + 1}` };
+  return { ...c, n: `0${i + 1}`, path: `/work/${slug}` };
 });
+
+export const caseBySlug = (slug: string | undefined): OrderedCase | undefined =>
+  ORDERED_CASES.find((c) => c.path === `/work/${slug}`);
 
 /**
  * Five case studies is a selection, and left alone a selection reads as the

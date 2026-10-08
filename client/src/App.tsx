@@ -20,6 +20,7 @@ import OfferPage from "@/pages/offer";
 import OfferTermsPage from "@/pages/offer-terms";
 import BooksPage from "@/pages/books";
 import ServicesPage from "@/pages/services";
+import { CasePage, WorkIndexPage } from "@/pages/work";
 
 const PORTFOLIO_SLUGS = ["fatema", "shaili", "aakanksha"];
 
@@ -52,6 +53,8 @@ function Router() {
         <Route path="/offer/terms" component={OfferTermsPage} />
         <Route path="/offer" component={OfferPage} />
         <Route path="/books" component={BooksPage} />
+        <Route path="/work" component={WorkIndexPage} />
+        <Route path="/work/:slug" component={CasePage} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin" component={AdminDashboard} />
         {PORTFOLIO_SLUGS.map((slug) => (

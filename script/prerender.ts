@@ -3,6 +3,7 @@ import path from "path";
 import { mkdir, readFile, writeFile } from "fs/promises";
 import { existsSync } from "fs";
 import { optimizeImages, optimizeStaticAssets } from "./optimize-images";
+import { WORK_ROUTES } from "../shared/work";
 
 /**
  * Prerenders the public routes of the built SPA to static HTML so that
@@ -73,6 +74,9 @@ const ROUTES: RouteDef[] = [
     description:
       "Notes on brand strategy, positioning, messaging and content systems from The Story Shapers collective.",
   },
+  // The case studies: /work and one page per case. Each sets its own title,
+  // description and JSON-LD, so there is nothing to override here.
+  ...WORK_ROUTES.map((route) => ({ route })),
   { route: "/fatema" },
   { route: "/shaili" },
   { route: "/aakanksha" },

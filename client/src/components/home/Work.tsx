@@ -9,7 +9,7 @@ import { Act, ActLabel } from "./Act";
 import { EyeDoodle } from "./Doodles";
 import { CaseReader } from "./CaseReader";
 import { useNarrow } from "@/hooks/use-act-progress";
-import { ORDERED_CASES, BRANDS, type Case } from "@/data/cases";
+import { ORDERED_CASES, BRANDS, type OrderedCase } from "@/data/cases";
 
 const NAVY = "#0C0A3E";
 const MONO = "ui-monospace, monospace";
@@ -59,7 +59,7 @@ export function Work() {
   const stacked = narrow || !!reduced;
 
   const [openId, setOpenId] = useState<string | null>(null);
-  const lastFocus = useRef<HTMLButtonElement | null>(null);
+  const lastFocus = useRef<HTMLElement | null>(null);
 
   /* Did WE push the history entry the reader is standing on? Somebody who
      arrived on a shared /#case-lbb link is standing on the entry that brought
@@ -70,7 +70,7 @@ export function Work() {
      — see landOn in CaseReader. Cleared the moment they open one themselves. */
   const [cold, setCold] = useState(false);
 
-  const open = useCallback((id: string, from: HTMLButtonElement) => {
+  const open = useCallback((id: string, from: HTMLElement) => {
     lastFocus.current = from;
     setCold(false);
     setOpenId(id);
@@ -191,7 +191,7 @@ function Rail({
 }: {
   progress: MotionValue<number>;
   stacked: boolean;
-  onOpen: (id: string, from: HTMLButtonElement) => void;
+  onOpen: (id: string, from: HTMLElement) => void;
   openId: string | null;
 }) {
   const railRef = useRef<HTMLDivElement>(null);
@@ -328,18 +328,36 @@ function Card({
   stacked,
   onOpen,
 }: {
-  c: Case & { n: string };
+  c: OrderedCase;
   stacked: boolean;
-  onOpen: (id: string, from: HTMLButtonElement) => void;
+  onOpen: (id: string, from: HTMLElement) => void;
 }) {
   return (
-    <button
-      type="button"
+    /* A LINK THAT OPENS A DIALOG.
+       This was a <button>, and a button has nowhere to go: nothing that reads
+       the page rather than clicking it could tell there were five case studies
+       behind these cards, let alone find them. It is an anchor to the case's
+       own page now, and a plain click is intercepted to open the reader over
+       the rail exactly as before. Anything else — a new tab, a crawler, a
+       copied link address — gets the page. */
+    <a
+      href={c.path}
       data-case={c.id}
       aria-haspopup="dialog"
-      onClick={(e) => onOpen(c.id, e.currentTarget)}
+      onClick={(e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault();
+        onOpen(c.id, e.currentTarget);
+      }}
+      /* a button answers to Space; a link does not, and this still behaves
+         like the button it was */
+      onKeyDown={(e) => {
+        if (e.key !== " ") return;
+        e.preventDefault();
+        onOpen(c.id, e.currentTarget);
+      }}
       className={
-        "group flex cursor-pointer flex-col overflow-hidden rounded-[3px] border p-0 text-left transition-[border-color,background-color,transform] duration-200 hover:-translate-y-[3px] focus-visible:-translate-y-[3px] focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[#cf81cd] " +
+        "group flex cursor-pointer flex-col overflow-hidden rounded-[3px] border p-0 text-left no-underline transition-[border-color,background-color,transform] duration-200 hover:-translate-y-[3px] focus-visible:-translate-y-[3px] focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[#cf81cd] " +
         (stacked
           ? "w-full "
           : "w-[clamp(19rem,28vw,26rem)] shrink-0 self-stretch max-h-[37rem] ")
@@ -492,7 +510,7 @@ function Card({
           </span>
         </span>
       </span>
-    </button>
+    </a>
   );
 }
 
