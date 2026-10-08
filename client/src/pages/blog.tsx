@@ -303,9 +303,15 @@ export default function Blog() {
   const blogLabel = blogSettings.label || "Blog";
   const blogHeading = blogSettings.heading || "Notes from the Margins";
   const blogSubtext = blogSettings.subtext || "Because good brands are built on thinking, not just things to post.";
+  /* Twenty-four to a page, up from the server's default nine. The pager is a
+     pair of buttons, not links, so nothing that reads HTML can follow it:
+     with twelve articles and nine to a page, three of them were linked from
+     nowhere on the site and reachable only through the sitemap. The pager
+     still appears, and still works, past twenty-four. */
   const { data, isLoading } = useBlogPosts({
     page,
     categoryId: selectedCategory,
+    limit: 24,
   });
 
   const posts = data?.posts || [];

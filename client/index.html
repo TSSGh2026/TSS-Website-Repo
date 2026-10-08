@@ -27,27 +27,139 @@
     <meta name="twitter:description" content="A senior marketing collective for growing brands: editorial-grade content strategy, brand positioning, go-to-market, SEO/AEO and growth marketing." />
     <meta name="twitter:image" content="https://www.storyshaperscollective.com/opengraph.jpg?v=2026-08-25" />
 
+    <!-- THE ENTITY GRAPH. One organisation, one website, three people, each
+         with an @id that page-level JSON-LD points back at (client/src/lib/seo.ts
+         holds the same ids). Everything here is already stated somewhere a
+         visitor can read it: the legal name, LLPIN and registered city on
+         /offer/terms, the two prices on /offer and the founder pages, the
+         phone and email in the footer. Nothing is published here first. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "The Story Shapers",
-      "alternateName": "The Story Shapers Collective",
-      "url": "https://www.storyshaperscollective.com/",
-      "logo": "https://www.storyshaperscollective.com/favicon.png",
-      "image": "https://www.storyshaperscollective.com/opengraph.jpg?v=2026-08-25",
-      "description": "The Story Shapers is a senior marketing collective for growing brands: editorial-grade content strategy, brand positioning, go-to-market, SEO/AEO and growth marketing. India-based, working globally.",
-      "founder": [
-        { "@type": "Person", "name": "Fatema Hanif" },
-        { "@type": "Person", "name": "Shaili Contractor" },
-        { "@type": "Person", "name": "Aakanksha Singh Devi" }
-      ],
-      "sameAs": [
-        "https://www.linkedin.com/company/the-story-shapers-collective",
-        "https://instagram.com/thestoryshapers"
-      ],
-      "address": { "@type": "PostalAddress", "addressCountry": "IN" },
-      "areaServed": "Worldwide"
+      "@graph": [
+        {
+          "@type": ["Organization", "ProfessionalService"],
+          "@id": "https://www.storyshaperscollective.com/#organization",
+          "name": "The Story Shapers",
+          "alternateName": "The Story Shapers Collective",
+          "legalName": "The Story Shapers Collective LLP",
+          "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "LLPIN",
+            "value": "ACW-3552"
+          },
+          "url": "https://www.storyshaperscollective.com/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.storyshaperscollective.com/logo-512.png",
+            "width": 512,
+            "height": 512
+          },
+          "image": "https://www.storyshaperscollective.com/opengraph.jpg?v=2026-08-25",
+          "description": "The Story Shapers is a senior-led marketing collective in India. Its three founders run brand strategy and positioning, content and editorial, websites, SEO and AEO content, go-to-market and fractional content leadership for founder-led and growing brands, and write memoirs, family histories and company books.",
+          "slogan": "We shape stories.",
+          "email": "hello@storyshaperscollective.com",
+          "telephone": "+91 91477 40521",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Bengaluru",
+            "addressRegion": "Karnataka",
+            "postalCode": "560046",
+            "addressCountry": "IN"
+          },
+          "areaServed": ["India", "Worldwide"],
+          "founder": [
+            { "@id": "https://www.storyshaperscollective.com/fatema#person" },
+            { "@id": "https://www.storyshaperscollective.com/shaili#person" },
+            { "@id": "https://www.storyshaperscollective.com/aakanksha#person" }
+          ],
+          "knowsAbout": [
+            "Brand strategy",
+            "Brand positioning",
+            "Brand voice and naming",
+            "Content strategy",
+            "Editorial operations",
+            "Website copywriting",
+            "Search engine optimisation",
+            "Answer engine optimisation",
+            "Generative engine optimisation",
+            "Go-to-market strategy",
+            "Thought leadership",
+            "Fractional content leadership",
+            "Memoir and family history writing"
+          ],
+          "sameAs": [
+            "https://www.linkedin.com/company/the-story-shapers-collective",
+            "https://instagram.com/thestoryshapers"
+          ],
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "sales",
+            "email": "hello@storyshaperscollective.com",
+            "telephone": "+91 91477 40521",
+            "url": "https://www.storyshaperscollective.com/contact",
+            "availableLanguage": "English"
+          },
+          "makesOffer": [
+            {
+              "@type": "Offer",
+              "name": "Brand website, written, designed and built",
+              "description": "A brand website of up to five pages, including strategy, copywriting, design and build, live in 10 working days once assets are received.",
+              "price": "80000",
+              "priceCurrency": "INR",
+              "url": "https://www.storyshaperscollective.com/offer"
+            },
+            {
+              "@type": "Offer",
+              "name": "Brand Audit Call",
+              "description": "A 45-minute diagnostic call with a founder of The Story Shapers on what is working, what is not, and what to fix first.",
+              "price": "5000",
+              "priceCurrency": "INR",
+              "url": "https://www.storyshaperscollective.com/team"
+            }
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://www.storyshaperscollective.com/#website",
+          "url": "https://www.storyshaperscollective.com/",
+          "name": "The Story Shapers",
+          "alternateName": "The Story Shapers Collective",
+          "inLanguage": "en-IN",
+          "publisher": { "@id": "https://www.storyshaperscollective.com/#organization" }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://www.storyshaperscollective.com/fatema#person",
+          "name": "Fatema Hanif",
+          "url": "https://www.storyshaperscollective.com/fatema",
+          "jobTitle": "Co-founder, Brand Strategy & Content Architecture",
+          "worksFor": { "@id": "https://www.storyshaperscollective.com/#organization" },
+          "workLocation": { "@type": "Place", "name": "Kolkata, India" },
+          "knowsAbout": ["Brand strategy", "Content architecture", "Go-to-market strategy", "Creator ecosystems"],
+          "sameAs": ["https://www.linkedin.com/in/fatemarfatia/"]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://www.storyshaperscollective.com/shaili#person",
+          "name": "Shaili Contractor",
+          "url": "https://www.storyshaperscollective.com/shaili",
+          "jobTitle": "Co-founder, Brand & Content Strategy",
+          "worksFor": { "@id": "https://www.storyshaperscollective.com/#organization" },
+          "knowsAbout": ["Brand strategy", "Content strategy", "Editorial leadership", "Journalism"],
+          "sameAs": ["https://www.linkedin.com/in/shailicontractor/"]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://www.storyshaperscollective.com/aakanksha#person",
+          "name": "Aakanksha Singh Devi",
+          "url": "https://www.storyshaperscollective.com/aakanksha",
+          "jobTitle": "Co-founder, Content Strategy & Editorial Operations",
+          "worksFor": { "@id": "https://www.storyshaperscollective.com/#organization" },
+          "knowsAbout": ["Content strategy", "Editorial operations", "Search engine optimisation", "Brand positioning"],
+          "sameAs": ["https://www.linkedin.com/in/aakankshasinghdevi/"]
+        }
+      ]
     }
     </script>
 

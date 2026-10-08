@@ -12,9 +12,10 @@ export function useCmsSettings() {
    pointing at a deleted endpoint is worse than no hook — it compiles, it looks
    available, and it 404s at runtime. */
 
-export function useBlogPosts(options?: { page?: number; categoryId?: number }) {
+export function useBlogPosts(options?: { page?: number; categoryId?: number; limit?: number }) {
   const params = new URLSearchParams();
   if (options?.page) params.set("page", String(options.page));
+  if (options?.limit) params.set("limit", String(options.limit));
   if (options?.categoryId) params.set("categoryId", String(options.categoryId));
   const qs = params.toString();
   return useQuery<{ posts: BlogPost[]; total: number; page: number; totalPages: number }>({

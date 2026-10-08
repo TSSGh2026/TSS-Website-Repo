@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import DOMPurify from "dompurify";
 import { Navbar } from "@/components/layout/Navbar";
 import { CONTACT } from "@/lib/contact";
+import { usePageSeo, personBySlug, breadcrumb, SITE_ORIGIN, WEBSITE_ID } from "@/lib/seo";
 import logoImg from "@assets/FullLogo_Transparent_NoBuffer_1772265926648.png";
 
 type CTA = { label: string; href: string };
@@ -56,13 +57,38 @@ export default function PortfolioPage() {
 
   const [openCase, setOpenCase] = useState<number | null>(null);
 
-  useEffect(() => {
-    if (portfolio) {
-      document.title = portfolio.metaTitle || `${portfolio.name} — The Story Shapers`;
-      const desc = document.querySelector('meta[name="description"]');
-      if (desc && portfolio.metaDescription) desc.setAttribute("content", portfolio.metaDescription);
-    }
-  }, [portfolio]);
+  /* A founder page is the page ABOUT a person, and says so: a ProfilePage whose
+     subject is the Person node index.html declares. Article bylines point at
+     the same id, so the author of a post and the founder on this page resolve
+     to one entity. */
+  const who = personBySlug(slug);
+  usePageSeo(
+    `portfolio-${slug}`,
+    portfolio
+      ? {
+          title: portfolio.metaTitle || `${portfolio.name} — The Story Shapers`,
+          description: portfolio.metaDescription || undefined,
+          ogType: "profile",
+          jsonLd: who
+            ? [
+                {
+                  "@type": "ProfilePage",
+                  "@id": `${SITE_ORIGIN}${who.path}`,
+                  url: `${SITE_ORIGIN}${who.path}`,
+                  name: portfolio.metaTitle || portfolio.name,
+                  mainEntity: { "@id": who.id },
+                  isPartOf: { "@id": WEBSITE_ID },
+                },
+                breadcrumb([
+                  ["The Story Shapers", "/"],
+                  ["Team", "/team"],
+                  [portfolio.name, who.path],
+                ]),
+              ]
+            : undefined,
+        }
+      : null,
+  );
 
   useEffect(() => {
     document.body.style.overflow = openCase !== null ? "hidden" : "";
@@ -464,7 +490,7 @@ export default function PortfolioPage() {
           </a>
           {footer.links && footer.links.length > 0 && (
             <div style={{ display: "flex", justifyContent: "center", gap: "1.5rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
-              {footer.links.map((l, i) => (
+              {footer.links.filter((l) => !isPlaceholderLink(l.href)).map((l, i) => (
                 <a key={i} href={l.href} target={l.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer"
                   style={{ fontFamily: "'Switzer', sans-serif", fontSize: "0.65rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)", textDecoration: "none" }}
                   data-testid={`link-footer-${i}`}>
@@ -531,6 +557,24 @@ export default function PortfolioPage() {
       </AnimatePresence>
     </div>
   );
+}
+
+/**
+ * A social link that was never filled in: the network's own front page.
+ *
+ * The CMS seeds "https://www.linkedin.com/" and "https://www.instagram.com/"
+ * as starting values, and a profile saved without replacing them published a
+ * LinkedIn link that led to LinkedIn. Worse than no link, for a reader and for
+ * anything trying to work out which profile belongs to this person.
+ */
+function isPlaceholderLink(href: string): boolean {
+  try {
+    const url = new URL(href);
+    const network = /(^|\.)(linkedin|instagram|twitter|x|facebook)\.com$/.test(url.hostname);
+    return network && url.pathname.replace(/\/+$/, "") === "";
+  } catch {
+    return false;
+  }
 }
 
 function CaseBlock({ label, children }: { label: string; children: React.ReactNode }) {

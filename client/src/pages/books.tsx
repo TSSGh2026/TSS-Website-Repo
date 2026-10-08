@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { usePageSeo, faqPage, breadcrumb, ORG_ID, SITE_ORIGIN } from "@/lib/seo";
+import { BOOKS, FAQS } from "@/components/books/content";
 import "@/styles/books.css";
 import { Footer, Nav } from "@/components/books/site";
 import { Hero } from "@/components/books/hero";
@@ -19,15 +21,56 @@ import { Close } from "@/components/books/close";
  * → the ask (close).
  */
 export default function BooksPage() {
+  /* Title and description must match the /books entry in script/prerender.ts.
+     They are in the words people search with (memoir, family history, company
+     history); the page itself keeps its own voice.
+
+     The Service node is built from BOOKS and the FAQPage from FAQS, the same
+     arrays the page renders, so the structured data cannot say something the
+     page does not. */
+  usePageSeo("books", {
+    title: "Memoir, Family History & Company History Books | The Story Shapers",
+    description:
+      "Memoirs, biographies, family histories, company histories and coffee table books, interviewed, written, designed and printed for you in India by The Story Shapers.",
+    jsonLd: [
+      {
+        "@type": "Service",
+        "@id": `${SITE_ORIGIN}/books#service`,
+        name: "Memoir, biography, family history and company history books",
+        serviceType: "Memoir and biography writing",
+        description:
+          "The Story Shapers interviews, writes, designs and prints memoirs, biographies, family histories, company histories, family photo books and coffee table books.",
+        url: `${SITE_ORIGIN}/books`,
+        provider: { "@id": ORG_ID },
+        areaServed: ["India", "Worldwide"],
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Books we make",
+          itemListElement: BOOKS.map((b) => ({
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: b.name,
+              description: `${b.statement} ${b.how} ${b.get}`,
+              audience: { "@type": "Audience", audienceType: b.forWho },
+            },
+          })),
+        },
+      },
+      faqPage(FAQS),
+      breadcrumb([
+        ["The Story Shapers", "/"],
+        ["Books", "/books"],
+      ]),
+    ],
+  });
+
   useEffect(() => {
-    const previous = document.title;
-    document.title = "Books & Keepsakes | The Story Shapers";
     // in-page links (the nav, "See the books we make") glide rather than jump, on this page only
     const html = document.documentElement;
     const scroll = html.style.scrollBehavior;
     html.style.scrollBehavior = "smooth";
     return () => {
-      document.title = previous;
       html.style.scrollBehavior = scroll;
     };
   }, []);

@@ -7,6 +7,7 @@ import DOMPurify from "dompurify";
 import { Navbar } from "@/components/layout/Navbar";
 import { useBlogPost, useBlogCategories, useBlogAuthors, useRelatedPosts } from "@/hooks/use-cms";
 import type { Author } from "@shared/schema";
+import { SITE_ORIGIN, ORG_ID, PEOPLE, absolute, usePageSeo } from "@/lib/seo";
 
 const ALLOWED_TAGS = [
   "p", "br", "strong", "em", "b", "i", "u", "a", "h1", "h2", "h3", "h4", "h5", "h6",
@@ -19,10 +20,26 @@ const ALLOWED_ATTRS = [
   "fetchpriority",
 ];
 
-// Canonical origin for URLs baked into metadata. window.location.href can't be
-// used for these: during build-time prerendering it points at the local
-// snapshot server, and that URL would ship inside the static HTML.
-const SITE_ORIGIN = "https://www.storyshaperscollective.com";
+/**
+ * A title tag as typed into the CMS, tidied.
+ *
+ * Three posts went out with a capital I where the bar belongs ("…Cacao Story
+ * I The Story Shapers"), and one with two spaces before it. Both are easy to
+ * type and invisible in the admin, so they are corrected here rather than
+ * left to be noticed.
+ */
+function cleanTitle(raw: string): string {
+  return raw
+    .replace(/\s+I\s+(The Story Shapers)\s*$/, " | $1")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** A CMS image field that holds an image. One post's holds a caption. */
+function imageUrl(...candidates: (string | null | undefined)[]): string | undefined {
+  const src = candidates.find((c) => c && /^(\/|https?:\/\/)/.test(c.trim()));
+  return src ? absolute(src.trim()) : undefined;
+}
 
 const VIDEO_HOSTS = new Set([
   "youtube.com", "youtube-nocookie.com", "vimeo.com", "player.vimeo.com",
@@ -200,7 +217,10 @@ function SubscribeModule({ slug }: { slug: string }) {
 function SharingRow({ title, slug }: { title: string; slug: string }) {
   const [copied, setCopied] = useState(false);
 
-  const url = typeof window !== "undefined" ? `${window.location.origin}/blog/${slug}` : `/blog/${slug}`;
+  /* The public address, never window.location: the prerender runs this on a
+     local server, and every article shipped share buttons that posted
+     "http://localhost:45173/blog/…" to LinkedIn and X. */
+  const url = `${SITE_ORIGIN}/blog/${slug}`;
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
   const linkedinUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
 
@@ -315,8 +335,10 @@ function AuthorBlock({ authorId, authorName, authors }: { authorId: number | nul
         >
           About the author
         </p>
+        {/* To the founder's own page where there is one. It used to link to
+            #author, which is this block. */}
         <a
-          href="#author"
+          href={PEOPLE[author.name]?.path ?? "#author"}
           style={{ textDecoration: "none" }}
           data-testid="link-author-name"
         >
@@ -497,10 +519,19 @@ export default function BlogPost() {
     if (!post) return;
 
     const prevTitle = document.title;
-    const metaTitle = post.metaTitle || post.title;
-    const metaDescription = post.metaDescription || post.excerpt;
-    const ogImage = post.ogImage || post.featuredImage;
-    const canonicalUrl = post.canonicalUrl || `${SITE_ORIGIN}/blog/${post.slug}`;
+    const metaTitle = cleanTitle(post.metaTitle || post.title);
+    const metaDescription = (post.metaDescription || post.excerpt || "").trim();
+    const ogImage = imageUrl(post.ogImage, post.featuredImage);
+    /* Always the article's own address. The CMS has a canonical field, and one
+       post's points at a slug that was never published — so the page told
+       search engines its real home was a URL with nothing on it. An article
+       here has exactly one address; there is nothing for the field to choose. */
+    const canonicalUrl = `${SITE_ORIGIN}/blog/${post.slug}`;
+    const author = PEOPLE[post.authorName];
+    const authorRecord = post.authorId ? authors?.find((a) => a.id === post.authorId) : null;
+    const category = post.categoryId ? categories?.find((c) => c.id === post.categoryId)?.name : null;
+    /* An unset publish date used to go out as `datePublished: null`. */
+    const published = post.publishedAt || post.updatedAt;
 
     document.title = metaTitle;
 
@@ -552,13 +583,25 @@ export default function BlogPost() {
     jsonLd.textContent = JSON.stringify({
       "@context": "https://schema.org",
       "@type": "BlogPosting",
-      headline: post.title,
+      headline: post.title.trim(),
       description: metaDescription,
-      image: ogImage ? (ogImage.startsWith("/") ? SITE_ORIGIN + ogImage : ogImage) : undefined,
-      author: { "@type": "Person", name: post.authorName },
-      datePublished: post.publishedAt,
-      dateModified: post.updatedAt || post.publishedAt,
-      publisher: { "@type": "Organization", name: "The Story Shapers" },
+      image: ogImage,
+      /* A founder's byline points at the Person node index.html declares, so
+         the author and the founder are one entity. Anyone else gets a name and
+         whatever profile the CMS holds for them. */
+      author: author
+        ? { "@type": "Person", "@id": author.id, name: author.name, url: SITE_ORIGIN + author.path }
+        : {
+            "@type": "Person",
+            name: post.authorName,
+            ...(authorRecord?.linkedin ? { sameAs: [authorRecord.linkedin] } : {}),
+          },
+      datePublished: published || undefined,
+      dateModified: post.updatedAt || published || undefined,
+      publisher: { "@id": ORG_ID },
+      isPartOf: { "@type": "Blog", "@id": `${SITE_ORIGIN}/blog`, name: "The Story Shapers blog" },
+      articleSection: category || undefined,
+      inLanguage: "en-IN",
       mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
       wordCount: post.content?.replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length || 0,
       timeRequired: `PT${post.readingTime || 1}M`,
@@ -572,7 +615,12 @@ export default function BlogPost() {
       if (createdCanonical && canonicalEl) canonicalEl.remove();
       else if (canonicalEl) canonicalEl.href = prevCanonical;
     };
-  }, [post]);
+  }, [post, authors, categories]);
+
+  /* A slug with no article behind it is still served the app with a 200, since
+     a post published after the last build has no static page yet and has to
+     be let through. So the miss is declared here instead. */
+  usePageSeo("post-missing", !isLoading && (error || !post) ? { noindex: true, title: "Post not found | The Story Shapers" } : null);
 
   if (isLoading) {
     return (

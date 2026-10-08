@@ -46,7 +46,7 @@ export function WordCycler({ words }: { words: string[] }) {
     <>
       {/* Coloured away from the static headline so the line reads as the part
           that is filling itself in, not as more headline. */}
-      <span aria-hidden className="text-[#c084fc]">
+      <span aria-hidden data-typed className="text-[#c084fc]">
         {visible}
         {!reduced && (
           <span className="caret ml-1 inline-block h-[0.78em] w-[2px] translate-y-[0.02em] bg-magenta-lift" />

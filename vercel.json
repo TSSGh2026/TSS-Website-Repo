@@ -4,7 +4,33 @@
   "outputDirectory": "dist/public",
   "framework": null,
   "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/index" },
-    { "source": "/(.*)", "destination": "/app.html" }
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/favicon.ico",
+      "destination": "/favicon.png"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/admin/login",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/(our-story|team|services|contact|join|blog|books|offer|fatema|shaili|aakanksha)",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/offer/terms",
+      "destination": "/app.html"
+    }
   ]
 }
