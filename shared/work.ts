@@ -18,6 +18,8 @@ export const CASE_SLUGS: Record<string, string> = {
   ccpl: "centre-court-pickleball-league",
   headout: "headout",
   tuisa: "tuisa",
+  postcard: "postcard-travel-club",
+  kelly: "kelly-and-crew",
 };
 
 export const WORK_ROUTES: string[] = [

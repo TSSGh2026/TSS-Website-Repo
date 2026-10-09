@@ -384,8 +384,8 @@ export function Navbar() {
  * in Navbar — so what the reader sees is the bar's own control opening and
  * closing, not a second piece of chrome arriving with its own close button.
  *
- * The scroll lock is `overflow: hidden` on the documentElement, the same choice
- * CaseReader makes and for the same measured reason: `position: fixed` on the
+ * The scroll lock is `overflow: hidden` on the documentElement, and for a
+ * measured reason: `position: fixed` on the
  * body collapses scrollHeight, which resets every act's progress to 0 and
  * re-cuts the film underneath.
  */

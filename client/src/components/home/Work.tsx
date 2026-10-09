@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Link, useLocation } from "wouter";
 import {
   motion,
   useReducedMotion,
@@ -7,9 +8,9 @@ import {
 } from "framer-motion";
 import { Act, ActLabel } from "./Act";
 import { EyeDoodle } from "./Doodles";
-import { CaseReader } from "./CaseReader";
 import { useNarrow } from "@/hooks/use-act-progress";
 import { ORDERED_CASES, BRANDS, type OrderedCase } from "@/data/cases";
+import { HOME_Y } from "@/lib/home-place";
 
 const NAVY = "#0C0A3E";
 const MONO = "ui-monospace, monospace";
@@ -20,21 +21,20 @@ const SERIF = "'Zodiak', Georgia, serif";
 const PAN_EXTRA = 1.04;
 
 /**
- * The case behind a `#case-lbb` hash, or null for anything else.
+ * The case an old `#case-lbb` link was pointing at, or undefined.
  *
- * Checked against the real list rather than pattern-matched, so a hash naming a
- * case that no longer exists opens nothing instead of opening a dialog with no
- * contents — and so the footer's `#act-peak` and the rest are simply not ours.
+ * Cases used to open in a dialog over this rail, and that hash was the address
+ * people copied. The dialog is gone; the links are not.
  */
-function caseIdFromHash(hash: string): string | null {
+function caseFromHash(hash: string): OrderedCase | undefined {
   const id = hash.startsWith("#case-") ? hash.slice(6) : null;
-  return id && ORDERED_CASES.some((c) => c.id === id) ? id : null;
+  return id ? ORDERED_CASES.find((c) => c.id === id) : undefined;
 }
 
 /**
  * ACT 5 — THE WORK. Five cases, panned sideways.
  *
- * A card is a BUTTON: the whole thing opens the case, so the hit area is the
+ * A card is ONE LINK to the case's page: the whole thing, so the hit area is the
  * card and not a link buried at the bottom of it. Three things on it, and no
  * synopsis — a picture, one number, and the tension. A card that asks you to
  * read a summary before you decide to read the case is asking twice.
@@ -57,142 +57,36 @@ export function Work() {
   const narrow = useNarrow(40);
   const reduced = useReducedMotion();
   const stacked = narrow || !!reduced;
+  const [, navigate] = useLocation();
 
-  const [openId, setOpenId] = useState<string | null>(null);
-  const lastFocus = useRef<HTMLElement | null>(null);
-
-  /* Did WE push the history entry the reader is standing on? Somebody who
-     arrived on a shared /#case-lbb link is standing on the entry that brought
-     them to the site, and calling back() on that takes them off it. */
-  const pushed = useRef(false);
-
-  /* True only for a case that was open before the reader ever touched the rail
-     — see landOn in CaseReader. Cleared the moment they open one themselves. */
-  const [cold, setCold] = useState(false);
-
-  const open = useCallback((id: string, from: HTMLElement) => {
-    lastFocus.current = from;
-    setCold(false);
-    setOpenId(id);
-    if (window.location.hash !== `#case-${id}`) {
-      window.history.pushState(null, "", `#case-${id}`);
-      pushed.current = true;
-    }
-  }, []);
-
-  const close = useCallback((opts?: { to?: string }) => {
-    setOpenId(null);
-
-    /* LEAVING FOR SOMEWHERE ELSE IS NOT THE SAME AS GOING BACK.
-       back() restores the scroll position of the entry it returns to, which
-       silently undid the scroll the reader had just made towards the close act
-       — measured landing at 6480, the rail, instead of 9720. So a close with a
-       destination replaces the case's entry rather than stepping off it, and
-       does not hand focus back to a card the reader is no longer looking at. */
-    if (opts?.to) {
-      pushed.current = false;
-      if (window.location.hash.startsWith("#case-")) {
-        window.history.replaceState(
-          null,
-          "",
-          window.location.pathname + window.location.search,
-        );
-      }
-      return;
-    }
-
-    /* preventScroll matters: focusing the card scroll-anchors it into view and
-       overrides the reader's own scroll restore. Measured 1035px of drift on
-       desktop and a full viewport on a phone, which lands the reader in a
-       different act from the one they opened the case from. */
-    lastFocus.current?.focus({ preventScroll: true });
-
-    if (pushed.current) {
-      /* back(), not a second pushState. The close button and the Back gesture
-         then mean the same thing and run the same code, instead of being two
-         paths that have to be kept in step — and the reader does not accumulate
-         one entry per case opened, which would turn Back into a walk back
-         through everything they had looked at. */
-      pushed.current = false;
-      window.history.back();
-    } else if (window.location.hash.startsWith("#case-")) {
-      window.history.replaceState(
-        null,
-        "",
-        window.location.pathname + window.location.search,
-      );
-    }
-  }, []);
-
-  /* THE HASH IS THE TRUTH, and this reads it.
-     Fires on Back and Forward and nothing else — clicking an in-page anchor
-     raises hashchange rather than popstate, so the footer's #act-* links do not
-     come through here. */
+  /* An old shared link, /#case-lbb. Replaced rather than pushed, so Back does
+     not return to an address whose only job is to forward again. */
   useEffect(() => {
-    const onPop = () => {
-      const id = caseIdFromHash(window.location.hash);
-      setOpenId(id);
-      pushed.current = !!id;
-      if (!id) lastFocus.current?.focus({ preventScroll: true });
-    };
-    window.addEventListener("popstate", onPop);
-    return () => window.removeEventListener("popstate", onPop);
-  }, []);
-
-  /* A shared link, opened cold. The rail goes on screen BEFORE the reader does,
-     because CaseReader captures scrollY on mount and restores it on unmount —
-     so this is what closing the case will land on. Without it the reader closes
-     onto the top of a page they have never seen. */
-  useEffect(() => {
-    const id = caseIdFromHash(window.location.hash);
-    if (!id) return;
-    document.getElementById("act-proof")?.scrollIntoView({ block: "start" });
-    setCold(true);
-    setOpenId(id);
-  }, []);
-
-  const openCase = ORDERED_CASES.find((c) => c.id === openId) ?? null;
+    const c = caseFromHash(window.location.hash);
+    if (c) navigate(c.path, { replace: true });
+  }, [navigate]);
 
   return (
-    <>
-      <Act
-        id="act-proof"
-        kind={stacked ? "flow" : "pin"}
-        span={2.6}
-        ground="dark"
-        bg={NAVY}
-        stagePad={stacked ? "px-6 py-16 sm:px-10" : "py-20"}
-        stageClassName="relative overflow-hidden"
-      >
-        {(progress) => (
-          <Rail progress={progress} stacked={stacked} onOpen={open} openId={openId} />
-        )}
-      </Act>
-
-      {openCase && (
-        /* keyed so each case gets a fresh mount, and with it a fresh capture of
-           where the page was when it opened */
-        <CaseReader
-          key={openCase.id}
-          caseStudy={openCase}
-          onClose={close}
-          landOn={cold ? "act-proof" : undefined}
-        />
-      )}
-    </>
+    <Act
+      id="act-proof"
+      kind={stacked ? "flow" : "pin"}
+      span={2.6}
+      ground="dark"
+      bg={NAVY}
+      stagePad={stacked ? "px-6 py-16 sm:px-10" : "py-20"}
+      stageClassName="relative overflow-hidden"
+    >
+      {(progress) => <Rail progress={progress} stacked={stacked} />}
+    </Act>
   );
 }
 
 function Rail({
   progress,
   stacked,
-  onOpen,
-  openId,
 }: {
   progress: MotionValue<number>;
   stacked: boolean;
-  onOpen: (id: string, from: HTMLElement) => void;
-  openId: string | null;
 }) {
   const railRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
@@ -224,13 +118,10 @@ function Rail({
   /* KEYBOARD FOCUS ON A PANNED RAIL.
      Tab moves focus to a card that is two screens of lateral pan away, and the
      browser cannot scroll sideways to reach it because the rail is a transform.
-     So the page scrolls VERTICALLY by the amount that pans it into the frame.
-     Skipped while a case is open, and after it closes: close() hands focus back
-     to the card it came from, which fires this, and panning then would undo the
-     scroll restore that just ran. */
+     So the page scrolls VERTICALLY by the amount that pans it into the frame. */
   const onFocusCapture = useCallback(
     (e: React.FocusEvent<HTMLDivElement>) => {
-      if (stacked || openId !== null || over <= 0) return;
+      if (stacked || over <= 0) return;
       const card = (e.target as HTMLElement).closest("[data-case]");
       if (!card) return;
       const act = document.getElementById("act-proof");
@@ -245,7 +136,7 @@ function Rail({
       if (!need) return;
       window.scrollTo(0, window.scrollY + (need / over) * runway);
     },
-    [stacked, openId, over],
+    [stacked, over],
   );
 
   return (
@@ -298,7 +189,7 @@ function Rail({
           </div>
 
           {ORDERED_CASES.map((c) => (
-            <Card key={c.id} c={c} stacked={stacked} onOpen={onOpen} />
+            <Card key={c.id} c={c} stacked={stacked} />
           ))}
 
           {/* trailing air, so the fifth card does not end flush against the
@@ -323,38 +214,25 @@ function Rail({
   );
 }
 
-function Card({
-  c,
-  stacked,
-  onOpen,
-}: {
-  c: OrderedCase;
-  stacked: boolean;
-  onOpen: (id: string, from: HTMLElement) => void;
-}) {
+function Card({ c, stacked }: { c: OrderedCase; stacked: boolean }) {
   return (
-    /* A LINK THAT OPENS A DIALOG.
-       This was a <button>, and a button has nowhere to go: nothing that reads
-       the page rather than clicking it could tell there were five case studies
-       behind these cards, let alone find them. It is an anchor to the case's
-       own page now, and a plain click is intercepted to open the reader over
-       the rail exactly as before. Anything else — a new tab, a crawler, a
-       copied link address — gets the page. */
-    <a
+    /* A LINK TO THE CASE'S OWN PAGE.
+       This was a <button> that opened a dialog, and a button has nowhere to
+       go: nothing that reads the page rather than clicking it could tell there
+       were five case studies behind these cards, let alone find them.
+
+       The click writes down where the page was before it leaves. The rail is a
+       pinned act, so "which card was I on" is a scroll position, and without it
+       Back would return the reader to the top of a page they were six screens
+       into. Home reads it back — see useActHash in pages/home.tsx. */
+    <Link
       href={c.path}
       data-case={c.id}
-      aria-haspopup="dialog"
-      onClick={(e) => {
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-        e.preventDefault();
-        onOpen(c.id, e.currentTarget);
-      }}
-      /* a button answers to Space; a link does not, and this still behaves
-         like the button it was */
-      onKeyDown={(e) => {
-        if (e.key !== " ") return;
-        e.preventDefault();
-        onOpen(c.id, e.currentTarget);
+      onClick={() => {
+        window.history.replaceState(
+          { ...window.history.state, [HOME_Y]: window.scrollY },
+          "",
+        );
       }}
       className={
         "group flex cursor-pointer flex-col overflow-hidden rounded-[3px] border p-0 text-left no-underline transition-[border-color,background-color,transform] duration-200 hover:-translate-y-[3px] focus-visible:-translate-y-[3px] focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[#cf81cd] " +
@@ -471,7 +349,9 @@ function Card({
             recognise as their own. Longer than a question, so a step down in
             size — the number above it is the loud element, and this earns it. */}
         <span
-          className="block"
+          /* room under it: a four-line sentence used to finish on the footer's
+             rule */
+          className="block pb-[1.2rem]"
           style={{
             fontFamily: SERIF,
             fontWeight: 400,
@@ -510,7 +390,7 @@ function Card({
           </span>
         </span>
       </span>
-    </a>
+    </Link>
   );
 }
 

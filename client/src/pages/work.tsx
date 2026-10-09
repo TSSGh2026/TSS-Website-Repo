@@ -1,7 +1,7 @@
 import { Link, useParams } from "wouter";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { CaseBody } from "@/components/home/CaseBody";
+import { CaseStory } from "@/components/home/CaseStory";
 import { PillLink } from "@/components/home/Shapes";
 import NotFound from "@/pages/not-found";
 import { BRANDS, ORDERED_CASES, caseBySlug, type OrderedCase } from "@/data/cases";
@@ -20,19 +20,18 @@ const SANS = "'Switzer', sans-serif";
    pages set their own, so the prerender has no entry to keep in step. */
 const INDEX_TITLE = "Case Studies: Brand, Content & Go-to-Market Work | The Story Shapers";
 const INDEX_DESCRIPTION =
-  "Case studies from The Story Shapers: Little Black Book, SOCIAL, Centre Court Pickleball League, Headout and Tuisa. The problem, the position, and what changed.";
+  "Case studies from The Story Shapers: Centre Court Pickleball League, Social, Tuisa, Postcard Travel Club, Kelly & Crew, Little Black Book and Headout. What the job was, what we did, and what came of it.";
 
 /**
  * /work/<slug> — ONE CASE STUDY, AT ITS OWN ADDRESS.
  *
- * The homepage opens these in a dialog, which is right for the homepage: it is
- * one scroll score, and a route would cost the reader their place in it. But a
- * dialog has no URL and its text is not in the HTML, so nothing that reads the
- * site rather than scrolling it could see the work. These pages are the same
- * five cases, the same words, somewhere a link can point.
+ * The homepage used to open these in a dialog. A dialog has no URL and its text
+ * is not in the HTML, so nothing that reads the site rather than scrolling it
+ * could see the work. The homepage cards link here now, and Back returns the
+ * reader to the card they left — see lib/home-place.ts.
  *
- * Bone, like the reader, and for the reader's reason: several hundred words of
- * argument read better on it than on navy. The section carries data-ground so
+ * Bone, because several hundred words of argument read better on it than on
+ * navy. The section carries data-ground so
  * the fixed nav knows to set itself in ink — see useGround in Navbar.tsx.
  */
 export function CasePage() {
@@ -43,20 +42,21 @@ export function CasePage() {
     `case-${slug}`,
     c
       ? {
-          /* the kind after the name, because "Social Case Study" on its own
+          /* the service after the name, because "Social Case Study" on its own
              could be about anything */
-          title: `${c.client} Case Study: ${c.kind} | The Story Shapers`,
-          /* the result first, because a description is the one line of this
-             page a search result or an AI answer is certain to show */
-          description: `${c.fig} ${c.figLab}. ${c.synopsis}`,
+          title: `${c.client} Case Study: ${c.full.service} | The Story Shapers`,
+          /* a description is the one line of this page a search result or an
+             AI answer is certain to show, so it is the sentence that says who
+             did what for whom */
+          description: c.full.standfirst,
           ogType: "article",
           jsonLd: [
             {
               "@type": "Article",
               "@id": `${SITE_ORIGIN}${c.path}#article`,
-              headline: `${c.client}: ${c.fig} ${c.figLab}`,
-              description: c.synopsis,
-              image: absolute(c.readerImg ?? c.img),
+              headline: `${c.client}: ${c.full.service}`,
+              description: c.full.standfirst,
+              ...(c.full.hero ? { image: absolute(c.full.hero.img) } : {}),
               about: { "@type": "Organization", name: c.client },
               articleSection: "Case studies",
               inLanguage: "en-IN",
@@ -77,7 +77,6 @@ export function CasePage() {
 
   if (!c) return <NotFound />;
 
-  const others = ORDERED_CASES.filter((x) => x.id !== c.id);
 
   return (
     <div style={{ backgroundColor: BONE, color: NAVY, fontFamily: SANS }} data-testid={`page-case-${c.id}`}>
@@ -102,7 +101,7 @@ export function CasePage() {
               <span aria-hidden="true">←</span> The work
             </Link>
             <article>
-              <CaseBody c={c} variant="page" />
+              <CaseStory client={c.client} full={c.full} story={c.story} />
             </article>
           </div>
         </section>
@@ -128,7 +127,7 @@ export function CasePage() {
             >
               More work
             </h2>
-            <CaseList cases={others} className="mt-[1.6rem]" compact />
+            <CaseList cases={ORDERED_CASES.filter((x) => x.id !== c.id)} className="mt-[1.6rem]" compact />
             {/* the site's one button, centred, where the reader has finished
                 both the case and the list of what else there is */}
             <div className="mt-[clamp(3rem,7vh,4.5rem)] flex justify-center">
@@ -379,8 +378,10 @@ function CaseList({
             )}
 
             {compact ? (
-              <span className="flex flex-wrap items-baseline justify-between gap-x-[2rem] gap-y-[0.3rem]">
-                <span style={{ fontSize: "0.98rem", lineHeight: 1.5, color: "rgba(255,255,255,0.78)" }}>
+              /* no wrap: on a phone the arrow dropped to a line of its own under
+                 any row whose text ran to two */
+              <span className="flex items-baseline justify-between gap-x-[1.5rem]">
+                <span className="min-w-0" style={{ fontSize: "0.98rem", lineHeight: 1.5, color: "rgba(255,255,255,0.78)" }}>
                   <span style={{ fontFamily: SERIF, fontWeight: 700, color: "#FFFFFF" }}>{c.fig}</span>{" "}
                   {c.figLab}
                 </span>
