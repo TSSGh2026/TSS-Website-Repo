@@ -20,6 +20,8 @@ import OfferPage from "@/pages/offer";
 import OfferTermsPage from "@/pages/offer-terms";
 import BooksPage from "@/pages/books";
 import ServicesPage from "@/pages/services";
+import { CasePage, WorkIndexPage } from "@/pages/work";
+import { savedHomeY } from "@/lib/home-place";
 
 const PORTFOLIO_SLUGS = ["fatema", "shaili", "aakanksha"];
 
@@ -31,6 +33,9 @@ function ScrollToTop() {
        the reader six screens above the thing they asked for. Home reads the
        hash itself once its acts have their real heights. */
     if (window.location.hash) return;
+    /* Back from a case study to the homepage: the card left the reader's place
+       on this history entry, and Home puts them back on it. */
+    if (savedHomeY() !== null) return;
     window.scrollTo(0, 0);
   }, [location]);
   return null;
@@ -52,6 +57,8 @@ function Router() {
         <Route path="/offer/terms" component={OfferTermsPage} />
         <Route path="/offer" component={OfferPage} />
         <Route path="/books" component={BooksPage} />
+        <Route path="/work" component={WorkIndexPage} />
+        <Route path="/work/:slug" component={CasePage} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin" component={AdminDashboard} />
         {PORTFOLIO_SLUGS.map((slug) => (

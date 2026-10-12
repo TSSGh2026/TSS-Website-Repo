@@ -17,6 +17,10 @@
       "destination": "/app.html"
     },
     {
+      "source": "/work/(little-black-book|social|centre-court-pickleball-league|headout|tuisa|postcard-travel-club|kelly-and-crew)",
+      "destination": "/app.html"
+    },
+    {
       "source": "/admin",
       "destination": "/app.html"
     },
@@ -25,7 +29,7 @@
       "destination": "/app.html"
     },
     {
-      "source": "/(our-story|team|services|contact|join|blog|books|offer|fatema|shaili|aakanksha)",
+      "source": "/(our-story|team|services|work|contact|join|blog|books|offer|fatema|shaili|aakanksha)",
       "destination": "/app.html"
     },
     {

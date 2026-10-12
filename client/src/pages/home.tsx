@@ -7,6 +7,7 @@ import { Work } from "@/components/home/Work";
 import { Shapes } from "@/components/home/Shapes";
 import { CTA } from "@/components/home/CTA";
 import { Footer } from "@/components/layout/Footer";
+import { savedHomeY } from "@/lib/home-place";
 
 /**
  * THE HOMEPAGE, AS A SCORE.
@@ -36,13 +37,19 @@ import { Footer } from "@/components/layout/Footer";
  * the moment the reader touches anything — a page that keeps yanking itself
  * back is worse than one that lands a few hundred pixels off.
  *
- * `#case-*` is not ours: Work.tsx opens the reader on those, and its own scroll
- * handling is what puts the rail behind it.
+ * `#case-*` is not ours: those are old links to a case study, and Work.tsx
+ * forwards them to the case's page.
+ *
+ * COMING BACK FROM A CASE STUDY is the same problem with a number instead of a
+ * name. The card wrote down the scroll position on its way out (lib/home-place),
+ * and that position is only correct once the acts above it are their real
+ * heights, so it gets the same treatment: land, land again, stop when touched.
  */
 function useActHash() {
   useEffect(() => {
     const id = window.location.hash.slice(1);
-    if (!id || id.startsWith("case-")) return;
+    const y = id ? null : savedHomeY();
+    if (y === null && (!id || id.startsWith("case-"))) return;
 
     let cancelled = false;
     const stop = () => {
@@ -54,7 +61,8 @@ function useActHash() {
 
     const land = () => {
       if (cancelled) return;
-      document.getElementById(id)?.scrollIntoView({ block: "start" });
+      if (y !== null) window.scrollTo(0, y);
+      else document.getElementById(id)?.scrollIntoView({ block: "start" });
     };
 
     land();
