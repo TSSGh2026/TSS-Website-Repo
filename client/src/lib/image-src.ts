@@ -54,26 +54,39 @@ export function fallbackToOriginal(src: string | null | undefined) {
 
 /**
  * Same fallback for images inside post bodies, which are raw HTML run through
- * DOMPurify and so cannot carry an inline handler. Called on the rendered
- * container after the article paints.
+ * DOMPurify and so cannot carry an inline handler.
+ *
+ * This listens once, on the document, rather than on each image. React can
+ * write the body's HTML more than once while the article settles, and every
+ * write throws away the <img> elements that were there before. Listeners
+ * attached to the first batch went with them, which left a new post's pictures
+ * blank. A capture listener on the document sees an error from whichever
+ * image is on the page when it fails. Returns the cleanup.
+ */
+export function watchBodyImageFallbacks(): () => void {
+  const onError = (event: Event) => {
+    if (event.target instanceof HTMLImageElement) revertToOriginal(event.target);
+  };
+  document.addEventListener("error", onError, true);
+  return () => document.removeEventListener("error", onError, true);
+}
+
+/**
+ * The browser starts fetching body images the moment the HTML is injected,
+ * which can be before the listener above exists. One that has already failed
+ * will never fire another error event, so the finished-but-empty case has to
+ * be caught by inspection instead. Cheap enough to run after every render.
  */
 export function applyBodyImageFallbacks(container: HTMLElement | null) {
   if (!container) return;
   for (const img of Array.from(container.querySelectorAll("img"))) {
-    const original = img.dataset.originalSrc;
-    if (!original || img.dataset.fellBack === "true") continue;
-
-    const revert = () => {
-      if (img.dataset.fellBack === "true") return;
-      img.dataset.fellBack = "true";
-      img.src = original;
-    };
-
-    // The browser starts fetching these the moment the HTML is injected, which
-    // is before this runs. One that has already failed by now will never fire
-    // another error event, so listening alone silently misses it — the finished
-    // -but-empty case has to be caught by inspection instead.
-    if (img.complete && img.naturalWidth === 0) revert();
-    else img.addEventListener("error", revert, { once: true });
+    if (img.complete && img.naturalWidth === 0) revertToOriginal(img);
   }
+}
+
+function revertToOriginal(img: HTMLImageElement) {
+  const original = img.dataset.originalSrc;
+  if (!original || img.dataset.fellBack === "true") return;
+  img.dataset.fellBack = "true";
+  img.src = original;
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Footer } from "@/components/layout/Footer";
 import { Link, useParams } from "wouter";
-import { imageSrc, fallbackToOriginal, applyBodyImageFallbacks } from "@/lib/image-src";
+import { imageSrc, fallbackToOriginal, applyBodyImageFallbacks, watchBodyImageFallbacks } from "@/lib/image-src";
 import { motion } from "framer-motion";
 import DOMPurify from "dompurify";
 import { Navbar } from "@/components/layout/Navbar";
@@ -498,12 +498,14 @@ export default function BlogPost() {
   const { data: authors } = useBlogAuthors();
 
   // Pictures inside the article body are raw HTML, so they cannot carry an
-  // onError prop the way the ones around them do. This wires up the same
-  // fallback once the body has painted.
+  // onError prop the way the ones around them do. One document-level listener
+  // catches failures from any body image, plus a sweep after every render for
+  // the ones that failed before it could hear them. See watchBodyImageFallbacks.
   const bodyRef = useRef<HTMLDivElement>(null);
+  useEffect(() => watchBodyImageFallbacks(), []);
   useEffect(() => {
     applyBodyImageFallbacks(bodyRef.current);
-  }, [post?.content]);
+  });
 
   const getCategoryName = (categoryId: number | null) => {
     if (!categoryId || !categories) return null;
